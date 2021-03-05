@@ -18,6 +18,7 @@ local Variables = {
 		return src.Parent.Name;
 	end};
 	["%$WORKSPACE"] = {Description = "Name of the current place", Obtain = function(src)
+		print(Util.getPlaceName());
 		return Util.getPlaceName();
 	end};
 	["%$ACTIVITY:<>"] = {Decription = "Away (No Script open), Idle (No Changes recently, <follow> (Editing)", Obtain = function(src, following)

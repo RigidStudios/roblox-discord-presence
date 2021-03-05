@@ -9,9 +9,10 @@ local success, place = pcall(function()
 end);
 
 -- If offline, above fetch will have failed, remedy that by just getting the game.
-if not place then
+if not success then
 	place = game
-end; 
+end;
+
 util.place = place;
 
 function util.getPlaceName()

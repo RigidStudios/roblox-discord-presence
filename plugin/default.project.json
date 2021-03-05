@@ -2,9 +2,18 @@
   "name": "project",
   "tree": {
     "$className": "DataModel",
+    
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      
+      "DRPC": {
+        "$path": "src/DRPC",
 
-    "DRPC": {
-      "$path": "src/DRPC"
+        "assets": {
+          "$className": "Folder",
+          "$ignoreUnknownInstances": true
+        }
+      }
     }
   }
 }

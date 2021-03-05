@@ -26,7 +26,7 @@ function activityCreator:Get()
 	
 	for _, button in pairs(Data:Get("Buttons") or {}) do
 		-- Semi-Blank labels aren't allowed.
-		if button.label == "" or button.url == "" then continue end;
+		if not (eval(button.label) and eval(button.url)) then continue end;
 		Activity:addButton(button.label, button.url);
 	end;
 	
