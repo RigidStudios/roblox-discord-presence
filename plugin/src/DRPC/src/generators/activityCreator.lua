@@ -5,11 +5,23 @@ local Activity = require(DRPC.src.activity).new();
 local FormatString = require(DRPC.src.generators.formatString);
 local Data = require(DRPC.src.dataHandler);
 
+function eval(item)
+	if item == "" then return false end;
+	if item == nil then return false end;
+	if item == false then return false end;
+	if item == 0 then return false end;
+	if pcall(function() return #item end) and #item == 0 then return false end;
+	return true;
+end
+
 function activityCreator:Get()
+	local savedDescription = Data:Get("Description");
+	local savedState = Data:Get("State");
+	
 	local construct = Activity
 		:clear()
-		:setDescription(FormatString:process(Data:Get("Description") or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
-		:setState(FormatString:process(Data:Get("State") or "Workspace: $WORKSPACE"))
+		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
+		:setState(FormatString:process(eval(savedState) and savedState or "Workspace: $WORKSPACE"))
 		:setImage("studio");
 	
 	for _, button in pairs(Data:Get("Buttons") or {}) do

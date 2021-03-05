@@ -6,12 +6,15 @@ local StudioService = game:GetService("StudioService");
 
 local Variables = {
 	["%$SCRIPT_NAME"] = {Description = "Name of the current script", Obtain = function(src)
+		if not src then return end;
 		return src.Name;
 	end};
 	["%$SCRIPT_LINES"] = {Description = "Line count of the current script", Obtain = function(src)
+		if not src then return end;
 		return #src.Source:split("\n");
 	end};
 	["%$SCRIPT_PARENT"] = {Description = "Name of the current script's parent", Obtain = function(src)
+		if not src then return end;
 		return src.Parent.Name;
 	end};
 	["%$WORKSPACE"] = {Description = "Name of the current place", Obtain = function(src)
@@ -24,16 +27,13 @@ local Variables = {
 	end};
 }
 
-
-
-
-
 function formatString:process(str)
 	for identifier, value in pairs(Variables) do
 		str = str:gsub(string.gsub(identifier, "<>", "(.+)"), function(...)
 			return value.Obtain(StudioService.ActiveScript, ...);
 		end);
 	end;
+	
 	return str;
 end;
 

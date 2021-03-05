@@ -14,8 +14,10 @@ function dataHandler:Set(key, data)
 	return data;
 end;
 
-function dataHandler:Get(key, data)
-	return self.data[key] or self.plugin:GetSetting(key);
+function dataHandler:Get(key)
+	local data = self.data[key] ~= nil and self.data[key] or self.plugin:GetSetting(key);
+	
+	return data;
 end;
 
 function dataHandler:AttachChange(key, func)
