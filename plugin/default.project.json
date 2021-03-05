@@ -1,0 +1,10 @@
+{
+  "name": "project",
+  "tree": {
+    "$className": "DataModel",
+
+    "DRPC": {
+      "$path": "src/DRPC"
+    }
+  }
+}
