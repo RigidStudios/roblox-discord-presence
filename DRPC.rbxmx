@@ -119,9 +119,9 @@ return function(plugin)
 	end;
 	
 	button1.InputBoxLabel.FocusLost:Connect(function() setLabel(1, "label", button1.InputBoxLabel.Text) end);
-	button2.InputBoxLabel.FocusLost:Connect(function() setLabel(2, "label", button1.InputBoxLabel.Text) end);
+	button2.InputBoxLabel.FocusLost:Connect(function() setLabel(2, "label", button2.InputBoxLabel.Text) end);
 	button1.InputBoxURL.FocusLost:Connect(function() setLabel(1, "url", button1.InputBoxURL.Text) end);
-	button2.InputBoxURL.FocusLost:Connect(function() setLabel(2, "url", button1.InputBoxURL.Text) end);
+	button2.InputBoxURL.FocusLost:Connect(function() setLabel(2, "url", button2.InputBoxURL.Text) end);
 end;]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
@@ -132,7 +132,7 @@ end;]]></ProtectedString>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
 						<string name="Name">resizeController</string>
-						<string name="ScriptGuid"></string>
+						<string name="ScriptGuid">{515DBA80-C227-4118-B594-F0C0AAF59ED3}</string>
 						<ProtectedString name="Source"><![CDATA[local module = {}
 
 local Text = game:GetService("TextService");
@@ -476,7 +476,7 @@ return formatString;
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">httpClient</string>
-					<string name="ScriptGuid"></string>
+					<string name="ScriptGuid">{26A121D6-3562-4A41-A712-D5E57DBEF76E}</string>
 					<ProtectedString name="Source"><![CDATA[local httpClient = {};
 local HTTP = game:GetService("HttpService");
 

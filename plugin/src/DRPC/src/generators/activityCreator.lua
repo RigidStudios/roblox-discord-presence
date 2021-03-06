@@ -1,6 +1,7 @@
 local activityCreator = {};
 
 local DRPC = script:FindFirstAncestor("DRPC");
+
 local Activity = require(DRPC.src.activity).new();
 local FormatString = require(DRPC.src.generators.formatString);
 local Data = require(DRPC.src.dataHandler);
@@ -18,15 +19,16 @@ function activityCreator:Get()
 	local savedDescription = Data:Get("Description");
 	local savedState = Data:Get("State");
 	
-	local construct = Activity
+	Activity
 		:clear()
-		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
+		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
 		:setState(FormatString:process(eval(savedState) and savedState or "Workspace: $WORKSPACE"))
 		:setImage("studio");
 	
 	for _, button in pairs(Data:Get("Buttons") or {}) do
 		-- Semi-Blank labels aren't allowed.
 		if not (eval(button.label) and eval(button.url)) then continue end;
+
 		Activity:addButton(FormatString:process(button.label), FormatString:process(button.url));
 	end;
 	
