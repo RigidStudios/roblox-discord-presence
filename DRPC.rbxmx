@@ -453,7 +453,8 @@ local Variables = {
 		return Util.place.PlaceId or "0";
 	end};
 	["%$PLACE_PUBLISHED:<>:<>"] = {Description = "If published, first setting, if not, second setting.", Obtain = function(src, publicStr, notPublicStr)
-		return Util.place.IsA and notPublicStr or publicStr;
+		-- IsA: member of Instance (only usable when place was set to current game instead of placeInfo.
+		return formatString:process(Util.place.IsA and notPublicStr or publicStr);
 	end};
 	["%$ACTIVITY:<>"] = {Decription = "Away (No Script open), Idle (No Changes recently, <follow> (Editing)", Obtain = function(src, following)
 		return Util.hasChanges() 
