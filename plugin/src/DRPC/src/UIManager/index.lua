@@ -3,11 +3,16 @@ local Assets = DRPC.assets;
 local Text = game:GetService("TextService");
 
 local Data = require(DRPC.src.dataHandler);
+local UI = {};
 
-return function(plugin)
-	if not plugin then return end;
+function UI:ProvidePlugin(plugin)
+	self.plugin = plugin;
+end;
+
+function UI:Start()
+	if not self.plugin then return end;
 	
-	local settingsGui = plugin:CreateDockWidgetPluginGui("settingsGui", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false));
+	local settingsGui = self.plugin:CreateDockWidgetPluginGui("settingsGui", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false));
 	
 	Assets.ScreenGui.Frame:Clone().Parent = settingsGui;
 	settingsGui.Title   = "DRPC Settings";
@@ -58,3 +63,5 @@ return function(plugin)
 	button1.InputBoxURL.FocusLost:Connect(function() setLabel(1, "url", button1.InputBoxURL.Text) end);
 	button2.InputBoxURL.FocusLost:Connect(function() setLabel(2, "url", button2.InputBoxURL.Text) end);
 end;
+
+return UI;
