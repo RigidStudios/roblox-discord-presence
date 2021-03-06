@@ -22,10 +22,10 @@ Feel free to contribute code, README contributions must be substantial.
 * Toggleable
 
 ## Installation
-* The plugin is available [here (DRPC_client)](https://github.com/RigidStudios/roblox-discord-presence/releases/tag/v0.1.2-alpha), and [here (direct plugin)](https://www.roblox.com/library/6478572909/DRPC).
+* The plugin is available [here (DRPC_client)](https://github.com/RigidStudios/roblox-discord-presence/releases/tag/v0.1.3-alpha), and [here (direct plugin)](https://www.roblox.com/library/6478572909/DRPC).
 * The server is slightly more complicated to set up:
    * To begin, you'll need an installation of [Node](https://nodejs.org/en/download/).
-   * Next, download the [DRPC_server](https://github.com/RigidStudios/roblox-discord-presence/releases/tag/v0.1.2-alpha), extract the files from the zip into a new folder.
+   * Next, download the [DRPC_server](https://github.com/RigidStudios/roblox-discord-presence/releases/tag/v0.1.3-alpha), extract the files from the zip into a new folder.
    * [Launch](https://i.imgur.com/cm8w8Pq.mp4) the command prompt in that file.
    * Run `npm i` followed by `node index.js` (The latter will be your startup command whenever you need it running).
    * As of right now, you'll be required to launch it at startup yourself until I make it a windows service, and you'll also have to keep the command prompt open.
