@@ -12,7 +12,7 @@ function eval(item)
 	if item == 0 then return false end;
 	if pcall(function() return #item end) and #item == 0 then return false end;
 	return true;
-end
+end;
 
 function activityCreator:Get()
 	local savedDescription = Data:Get("Description");
@@ -27,10 +27,10 @@ function activityCreator:Get()
 	for _, button in pairs(Data:Get("Buttons") or {}) do
 		-- Semi-Blank labels aren't allowed.
 		if not (eval(button.label) and eval(button.url)) then continue end;
-		Activity:addButton(button.label, button.url);
+		Activity:addButton(FormatString:process(button.label), FormatString:process(button.url));
 	end;
 	
-	return Activity
+	return Activity;
 end;
 
 return activityCreator;

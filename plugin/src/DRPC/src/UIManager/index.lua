@@ -54,7 +54,7 @@ return function(plugin)
 	end;
 	
 	button1.InputBoxLabel.FocusLost:Connect(function() setLabel(1, "label", button1.InputBoxLabel.Text) end);
-	button2.InputBoxLabel.FocusLost:Connect(function() setLabel(2, "label", button1.InputBoxLabel.Text) end);
+	button2.InputBoxLabel.FocusLost:Connect(function() setLabel(2, "label", button2.InputBoxLabel.Text) end);
 	button1.InputBoxURL.FocusLost:Connect(function() setLabel(1, "url", button1.InputBoxURL.Text) end);
-	button2.InputBoxURL.FocusLost:Connect(function() setLabel(2, "url", button1.InputBoxURL.Text) end);
+	button2.InputBoxURL.FocusLost:Connect(function() setLabel(2, "url", button2.InputBoxURL.Text) end);
 end;

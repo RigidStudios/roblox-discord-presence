@@ -180,7 +180,7 @@ function activity.new()
 end;
 
 function activity:clear()
-	self.buttons = nil;
+	self.buttons = {};
 	
 	return self;
 end;
@@ -324,9 +324,7 @@ function dataHandler:Set(key, data)
 		end;
 	end;
 	
-	print(data);
 	self.data[key] = data;
-	print(self.data[key]);
 	
 	return data;
 end;
@@ -408,7 +406,7 @@ function activityCreator:Get()
 	
 	for _, button in pairs(Data:Get("Buttons") or {}) do
 		-- Semi-Blank labels aren't allowed.
-		if button.label == "" or button.url == "" then continue end;
+		if not (eval(button.label) and eval(button.url)) then continue end;
 		Activity:addButton(button.label, button.url);
 	end;
 	
@@ -522,9 +520,10 @@ local success, place = pcall(function()
 end);
 
 -- If offline, above fetch will have failed, remedy that by just getting the game.
-if not place then
+if not success then
 	place = game
-end; 
+end;
+
 util.place = place;
 
 function util.getPlaceName()
@@ -554,7 +553,6 @@ function util.hasChanges()
 		end;
 	end;
 	
-	if not s then return false end;
 	return changes;
 end;
 
