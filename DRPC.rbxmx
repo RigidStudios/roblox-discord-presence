@@ -381,6 +381,7 @@ return dataHandler;
 						<ProtectedString name="Source"><![CDATA[local activityCreator = {};
 
 local DRPC = script:FindFirstAncestor("DRPC");
+
 local Activity = require(DRPC.src.activity).new();
 local FormatString = require(DRPC.src.generators.formatString);
 local Data = require(DRPC.src.dataHandler);
@@ -392,25 +393,26 @@ function eval(item)
 	if item == 0 then return false end;
 	if pcall(function() return #item end) and #item == 0 then return false end;
 	return true;
-end
+end;
 
 function activityCreator:Get()
 	local savedDescription = Data:Get("Description");
 	local savedState = Data:Get("State");
 	
-	local construct = Activity
+	Activity
 		:clear()
-		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
+		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
 		:setState(FormatString:process(eval(savedState) and savedState or "Workspace: $WORKSPACE"))
 		:setImage("studio");
 	
 	for _, button in pairs(Data:Get("Buttons") or {}) do
 		-- Semi-Blank labels aren't allowed.
 		if not (eval(button.label) and eval(button.url)) then continue end;
-		Activity:addButton(button.label, button.url);
+
+		Activity:addButton(FormatString:process(button.label), FormatString:process(button.url));
 	end;
 	
-	return Activity
+	return Activity;
 end;
 
 return activityCreator;
@@ -447,16 +449,22 @@ local Variables = {
 	["%$WORKSPACE"] = {Description = "Name of the current place", Obtain = function(src)
 		return Util.getPlaceName();
 	end};
+	["%$PLACE_ID"] = {Description = "ID of the current place", Obtain = function(src)
+		return Util.place.PlaceId or "0";
+	end};
+	["%$PLACE_PUBLISHED:<>:<>"] = {Description = "If published, first setting, if not, second setting.", Obtain = function(src, publicStr, notPublicStr)
+		return Util.place.IsA and notPublicStr or publicStr;
+	end};
 	["%$ACTIVITY:<>"] = {Decription = "Away (No Script open), Idle (No Changes recently, <follow> (Editing)", Obtain = function(src, following)
 		return Util.hasChanges() 
 			and formatString:process(following or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)")
 			or  (not StudioService.ActiveScript and "Away" or "Idle...");
 	end};
-}
+};
 
 function formatString:process(str)
 	for identifier, value in pairs(Variables) do
-		str = str:gsub(string.gsub(identifier, "<>", "(.+)"), function(...)
+		str = str:gsub(string.gsub(identifier, "<>", "(.*)"), function(...)
 			return value.Obtain(StudioService.ActiveScript, ...);
 		end);
 	end;
