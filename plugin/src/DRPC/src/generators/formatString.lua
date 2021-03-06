@@ -18,19 +18,25 @@ local Variables = {
 		return src.Parent.Name;
 	end};
 	["%$WORKSPACE"] = {Description = "Name of the current place", Obtain = function(src)
-		print(Util.getPlaceName());
 		return Util.getPlaceName();
+	end};
+	["%$PLACE_ID"] = {Description = "ID of the current place", Obtain = function(src)
+		return Util.place.PlaceId or "0";
+	end};
+	["%$PLACE_PUBLISHED:<>:<>"] = {Description = "If published, first setting, if not, second setting.", Obtain = function(src, publicStr, notPublicStr)
+		-- IsA: member of Instance (only usable when place was set to current game instead of placeInfo.
+		return Util.place.IsA and notPublicStr or publicStr;
 	end};
 	["%$ACTIVITY:<>"] = {Decription = "Away (No Script open), Idle (No Changes recently, <follow> (Editing)", Obtain = function(src, following)
 		return Util.hasChanges() 
 			and formatString:process(following or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)")
 			or  (not StudioService.ActiveScript and "Away" or "Idle...");
 	end};
-}
+};
 
 function formatString:process(str)
 	for identifier, value in pairs(Variables) do
-		str = str:gsub(string.gsub(identifier, "<>", "(.+)"), function(...)
+		str = str:gsub(string.gsub(identifier, "<>", "(.*)"), function(...)
 			return value.Obtain(StudioService.ActiveScript, ...);
 		end);
 	end;
