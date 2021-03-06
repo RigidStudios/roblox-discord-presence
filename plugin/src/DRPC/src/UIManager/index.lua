@@ -25,6 +25,7 @@ function UI:Start()
 	enabledButton.ClickListener.Text = Data:Get("Enabled") and "Yes" or "No";
 	enabledButton.ClickListener.MouseButton1Click:Connect(function()
 		local enabled = Data:Set("Enabled", not Data:Get("Enabled"));
+		
 		enabledButton.ClickListener.Text = enabled and "Yes" or "No";
 	end);
 	

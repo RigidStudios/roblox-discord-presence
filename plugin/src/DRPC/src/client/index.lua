@@ -17,8 +17,6 @@ function client:Close()
 	self.Http:Post({
 		updateType = "CLOSE";
 	});
-	
-	self.Enabled = false;
 end;
 
 function client:SetActivity()
@@ -29,8 +27,6 @@ function client:SetActivity()
 end;
 
 function client:Open()
-	self.Enabled = true;
-	
 	return self:SetActivity();
 end;
 

@@ -1,6 +1,8 @@
 local dataHandler = { data = {}, attachments = {} };
 
 function dataHandler:Set(key, data)
+	self.data[key] = data;
+
 	if self.data[key] ~= data then
 		if self.attachments[key] then
 			for _, func in pairs(self.attachments[key]) do
@@ -8,15 +10,18 @@ function dataHandler:Set(key, data)
 			end;
 		end;
 	end;
-	
-	self.data[key] = data;
-	
+
 	return data;
 end;
 
 function dataHandler:Get(key)
-	local data = self.data[key] ~= nil and self.data[key] or self.plugin:GetSetting(key);
-	
+	local data = self.data[key];
+	if data == nil or data == "" then
+		data = self.plugin:GetSetting(key);
+		
+		self.data[key] = data;
+	end;
+
 	return data;
 end;
 
