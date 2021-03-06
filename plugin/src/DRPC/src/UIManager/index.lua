@@ -18,15 +18,13 @@ function UI:Start()
 	settingsGui.Title   = "DRPC Settings";
 	settingsGui.Enabled = true;
 	
-	local resizeController = require(DRPC.src.UIManager.resizeController):Init(settingsGui);
+	-- Resize Controller Init.
+	require(DRPC.src.UIManager.resizeController):Init(settingsGui);
 	
 	local enabledButton = settingsGui.Frame.EnabledButton;
 	enabledButton.ClickListener.Text = Data:Get("Enabled") and "Yes" or "No";
-	print("Starting listener.")
 	enabledButton.ClickListener.MouseButton1Click:Connect(function()
-		print("Click detected.");
 		local enabled = Data:Set("Enabled", not Data:Get("Enabled"));
-		print(Data:Get("Enabled"));
 		enabledButton.ClickListener.Text = enabled and "Yes" or "No";
 	end);
 	

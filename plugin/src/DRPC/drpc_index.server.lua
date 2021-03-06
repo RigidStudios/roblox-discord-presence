@@ -13,7 +13,6 @@ local Http   = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
 
 Data:AttachChange("Enabled", function(isEnabled)
-	Client.Enabled = isEnabled;
 	if not isEnabled then Client:Close() else Client:Open() end;
 end);
 
