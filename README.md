@@ -36,4 +36,5 @@ If it doesn't work and you've correctly followed the steps, either contribute to
 
 ### Special Thanks to
 [@BaileyEatsPizza](https://github.com/BaileyEatsPizza) - Scripting
+
 [@Kunal0004](https://github.com/Kunal0004) - Testing
