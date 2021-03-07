@@ -34,12 +34,13 @@ end;
 -- Initiate with cb -> callback(success<bool>, response<string>);
 function client:login(cb)
 	self.Enabled = true;
-	
-	print("Enabled.")
 
-	local success, reply = self:Open();
-
-	print("Opened.")
+	local success, reply;
+	if Data:Get("Enabled") then
+		success, reply = self:Open();
+	else
+		success = false;
+	end;
 
 	spawn(function()
 		while 1 do
@@ -48,23 +49,17 @@ function client:login(cb)
 			if Data:Get("Enabled") then
 				print(ActivityCreator:Get());
 				self:SetActivity();
-			end
-		end
-	end)
-	
-	print("Client internal loop set up.");
+			end;
+		end;
+	end);
 
 	if cb then
 		cb(success, reply);
 	end;
 
-	print("Callback called.");
-
 	client.plugin.Unloading:Connect(function()
 		self:Close();
 	end);
-
-	print("Unloading safety.");
 end;
 
 return client;
