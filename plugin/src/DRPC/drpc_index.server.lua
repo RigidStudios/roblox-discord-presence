@@ -14,7 +14,7 @@ local ClientObj = Client.new(Http, false);
 
 Data:AttachChange("Enabled", function(isEnabled)
 	warn("Activation set to:", isEnabled);
-	if not isEnabled then ClientObj:Close() else ClientObj:Open() end;
+	if isEnabled then ClientObj:Open() else ClientObj:Close() end;
 end);
 
 UI:Start();

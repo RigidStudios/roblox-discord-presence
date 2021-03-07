@@ -1,7 +1,8 @@
 local client = {};
-
 local DRPC = script:FindFirstAncestor("DRPC");
+
 local ActivityCreator = require(DRPC.src.generators.activityCreator);
+local Data = require(DRPC.src.dataHandler);
 
 function client:ProvidePlugin(plugin)
 	client.plugin = plugin;
@@ -44,7 +45,8 @@ function client:login(cb)
 		while 1 do
 			wait(2.6); -- Accuracy un-necessary.
 			
-			if self.Enabled then
+			if Data:Get("Enabled") then
+				print(ActivityCreator:Get());
 				self:SetActivity();
 			end
 		end
