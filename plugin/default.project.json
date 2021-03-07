@@ -7,12 +7,7 @@
       "$className": "ServerScriptService",
       
       "DRPC": {
-        "$path": "src/DRPC",
-
-        "assets": {
-          "$className": "Folder",
-          "$ignoreUnknownInstances": true
-        }
+        "$path": "src/DRPC"
       }
     }
   }
