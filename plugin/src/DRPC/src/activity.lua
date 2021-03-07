@@ -7,17 +7,19 @@ function activity.new()
 end;
 
 function activity:clear()
-	self.buttons = {};
+	self.buttons = nil;
 	
 	return self;
 end;
 
 function activity:addButton(buttonName, buttonValue)
-	if not self.buttons then self.buttons = {} end;
-	
-	-- TODO?: Surplus buttons check.
-	self.buttons[#self.buttons + 1] = { label = buttonName, url = buttonValue };
-	
+	if buttonName and buttonValue and buttonName ~= "" and buttonValue ~= "" then
+		if not self.buttons then self.buttons = {} end;
+		
+		-- TODO?: Surplus buttons check.
+		self.buttons[#self.buttons + 1] = { label = buttonName, url = buttonValue };
+	end;
+
 	return self;
 end;
 
