@@ -3,11 +3,9 @@ local dataHandler = { data = {}, attachments = {} };
 function dataHandler:Set(key, data)
 	self.data[key] = data;
 
-	if self.data[key] ~= data then
-		if self.attachments[key] then
-			for _, func in pairs(self.attachments[key]) do
-				func(data);
-			end;
+	if self.attachments[key] then
+		for _, func in pairs(self.attachments[key]) do
+			func(data);
 		end;
 	end;
 

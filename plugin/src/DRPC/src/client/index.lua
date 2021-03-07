@@ -34,7 +34,11 @@ end;
 function client:login(cb)
 	self.Enabled = true;
 	
+	print("Enabled.")
+
 	local success, reply = self:Open();
+
+	print("Opened.")
 
 	spawn(function()
 		while 1 do
@@ -46,13 +50,19 @@ function client:login(cb)
 		end
 	end)
 	
+	print("Client internal loop set up.");
+
 	if cb then
 		cb(success, reply);
 	end;
 
+	print("Callback called.");
+
 	client.plugin.Unloading:Connect(function()
 		self:Close();
 	end);
+
+	print("Unloading safety.");
 end;
 
 return client;
