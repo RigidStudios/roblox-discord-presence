@@ -35,4 +35,5 @@ Feel free to contribute code, README contributions must be substantial.
 If it doesn't work and you've correctly followed the steps, either contribute to this very barebones installation guide to fix it for others, or submit an issue.
 
 ### Special Thanks to
+[@BaileyEatsPizza](https://github.com/BaileyEatsPizza) - Scripting
 [@Kunal0004](https://github.com/Kunal0004) - Testing
