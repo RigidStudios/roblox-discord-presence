@@ -37,14 +37,4 @@ function dataHandler:Save()
 	return dataHandler;
 end;
 
-function dataHandler:ProvidePlugin(plugin)
-	self.plugin = plugin;
-	
-	plugin.Unloading:Connect(function()
-		self:Save();
-	end);
-	
-	return self;
-end;
-
 return dataHandler;

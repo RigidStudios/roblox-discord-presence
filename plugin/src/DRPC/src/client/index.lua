@@ -4,10 +4,6 @@ local DRPC = script:FindFirstAncestor("DRPC");
 local ActivityCreator = require(DRPC.src.generators.activityCreator);
 local Data = require(DRPC.src.dataHandler);
 
-function client:ProvidePlugin(plugin)
-	client.plugin = plugin;
-end;
-
 function client.new(Http, _debug)
 	local self = setmetatable({ Http = Http, _debug = _debug }, { __index = client });
 	
@@ -57,7 +53,7 @@ function client:login(cb)
 		cb(success, reply);
 	end;
 
-	client.plugin.Unloading:Connect(function()
+	self.plugin.Unloading:Connect(function()
 		self:Close();
 	end);
 end;
