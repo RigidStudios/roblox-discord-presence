@@ -17,14 +17,21 @@
 				<string name="ScriptGuid">{FA36BD89-EAF5-45FC-A2C5-B7DD646EF89E}</string>
 				<ProtectedString name="Source"><![CDATA[local DRPC = script:FindFirstAncestor("DRPC");
 
+local env = {
+	["plugin"] = plugin
+}
+
+--preload and set up the env for the modules to remove :ProvidePlugin(plugin)
+for i,v in ipairs(DRPC:GetDescendants()) do
+	if v:IsA("ModuleScript") then
+		local m = require(v)
+		setmetatable(m,{__index = env})
+	end
+end
+
 local Data = require(DRPC.src.dataHandler);
-Data:ProvidePlugin(plugin);
-
 local UI = require(DRPC.src.UIManager.index);
-UI:ProvidePlugin(plugin);
-
 local Client = require(DRPC.src.client.index);
-Client:ProvidePlugin(plugin);
 
 local Http   = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
@@ -77,10 +84,6 @@ local Text = game:GetService("TextService");
 
 local Data = require(DRPC.src.dataHandler);
 local UI = {};
-
-function UI:ProvidePlugin(plugin)
-	self.plugin = plugin;
-end;
 
 function UI:Start()
 	if not self.plugin then return end;
@@ -316,10 +319,6 @@ local DRPC = script:FindFirstAncestor("DRPC");
 local ActivityCreator = require(DRPC.src.generators.activityCreator);
 local Data = require(DRPC.src.dataHandler);
 
-function client:ProvidePlugin(plugin)
-	client.plugin = plugin;
-end;
-
 function client.new(Http, _debug)
 	local self = setmetatable({ Http = Http, _debug = _debug }, { __index = client });
 	
@@ -369,7 +368,7 @@ function client:login(cb)
 		cb(success, reply);
 	end;
 
-	client.plugin.Unloading:Connect(function()
+	self.plugin.Unloading:Connect(function()
 		self:Close();
 	end);
 end;
@@ -424,16 +423,6 @@ function dataHandler:Save()
 	end;
 	
 	return dataHandler;
-end;
-
-function dataHandler:ProvidePlugin(plugin)
-	self.plugin = plugin;
-	
-	plugin.Unloading:Connect(function()
-		self:Save();
-	end);
-	
-	return self;
 end;
 
 return dataHandler;

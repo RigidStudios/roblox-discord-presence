@@ -1,13 +1,19 @@
 local DRPC = script:FindFirstAncestor("DRPC");
 
+local env = {
+	["plugin"] = plugin
+}
+
+for i,v in ipairs(DRPC:GetDescendants()) do
+	if v:IsA("ModuleScript") then
+		local m = require(v)
+		setmetatable(m,{__index = env})
+	end
+end
+
 local Data = require(DRPC.src.dataHandler);
-Data:ProvidePlugin(plugin);
-
 local UI = require(DRPC.src.UIManager.index);
-UI:ProvidePlugin(plugin);
-
 local Client = require(DRPC.src.client.index);
-Client:ProvidePlugin(plugin);
 
 local Http   = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
