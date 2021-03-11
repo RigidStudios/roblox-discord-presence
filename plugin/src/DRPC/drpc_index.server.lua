@@ -11,12 +11,9 @@ for i,v in ipairs(DRPC:GetDescendants()) do
 	end
 end
 
-local Data    = require(DRPC.src.dataHandler);
-Data.plugin   = plugin;
-local UI      = require(DRPC.src.ui.index);
-UI.plugin     = plugin;
-local Client  = require(DRPC.src.client.index);
-Client.plugin = plugin;
+local Data   = require(DRPC.src.dataHandler);
+local UI     = require(DRPC.src.ui.index);
+local Client = require(DRPC.src.client.index);
 
 local Http      = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
@@ -26,6 +23,11 @@ Data:AttachChange("Enabled", function(isEnabled)
 end);
 
 UI:Start();
+
+plugin.Unloading:Connect(function()
+	ClientObj.Enabled = false;
+	ClientObj.Terminated = true;
+end);
 
 ClientObj:login(function(success)
 	if success then

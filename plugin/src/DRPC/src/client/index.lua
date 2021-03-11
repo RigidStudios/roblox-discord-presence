@@ -47,6 +47,10 @@ function client:login(cb)
 			if self.Enabled then
 				self:SetActivity();
 			end;
+
+			if self.Terminated then
+				break;
+			end;
 		end;
 	end);
 
