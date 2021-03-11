@@ -19,8 +19,10 @@ function UI:Start()
 	settingsGui.Enabled = true;
 
 	-- Resize Controller Init.
-	require(DRPC.src.UIManager.resizeController):Init(settingsGui);
-	local toggleController = require(DRPC.src.UIManager.toggleController):Init(settingsGui.UI.Container.Enable.Container.Switch);
+	require(DRPC.src.ui.resizeController):Init(settingsGui);
+	local toggleController = require(DRPC.src.ui.toggleController);
+	toggleController.new("Enabled"):Init(settingsGui.UI.Container.Enable.Container.Switch);
+	toggleController.new("EnabledTS"):Init(settingsGui.UI.Container.EnableTS.Container.Switch);
 
 	local descriptionEditor = settingsGui.UI.Container.DescriptionInput.Input;
 	descriptionEditor.Text = Data:Get("Description") or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES Lines)";

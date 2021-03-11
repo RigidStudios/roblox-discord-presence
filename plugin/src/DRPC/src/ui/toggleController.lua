@@ -1,20 +1,23 @@
 local module = {};
 local DRPC = script:FindFirstAncestor("DRPC");
 
-local Text = game:GetService("TextService");
 local Data = require(DRPC.src.dataHandler);
 
 local rs = game:GetService("RunService").RenderStepped;
 
+function module.new(dataSave)
+    return setmetatable({ dataSave = dataSave }, { __index = module });
+end
+
 function module:onClick(element)
     return function()
-        Data:Set("Enabled", module:Move(element, not Data:Get("Enabled")));
+        Data:Set(self.dataSave, module:Move(element, not Data:Get(self.dataSave)));
     end;
 end;
 
 function module:Init(element)
-    local enabled = Data:Get("Enabled");
-    Data:Set("Enabled", self:Move(element.Value, enabled or enabled == nil));
+    local enabled = Data:Get(self.dataSave);
+    Data:Set(self.dataSave, self:Move(element.Value, enabled or enabled == nil));
 
 	element.MouseButton1Click:Connect(self:onClick(element.Value));
     element.Value.MouseButton1Click:Connect(self:onClick(element.Value));
@@ -34,7 +37,9 @@ function module:Move(element, enabled)
             rs:Wait();
         end;
     end;
-    return enabled;
+
+    element.Parent.Parent.Text.Title.Text = enabled and "Enabled" or "Disabled";
+    return not not enabled;
 end;
 
 return module;

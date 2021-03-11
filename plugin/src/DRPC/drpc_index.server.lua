@@ -12,7 +12,7 @@ for i,v in ipairs(DRPC:GetDescendants()) do
 end
 
 local Data = require(DRPC.src.dataHandler);
-local UI = require(DRPC.src.UIManager.index);
+local UI = require(DRPC.src.ui.index);
 local Client = require(DRPC.src.client.index);
 
 local Http   = require(DRPC.src.httpClient).new("http://localhost:4455/");

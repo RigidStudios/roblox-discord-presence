@@ -18,13 +18,17 @@ end;
 function activityCreator:Get()
 	local savedDescription = Data:Get("Description");
 	local savedState = Data:Get("State");
-	
+
 	Activity
 		:clear()
 		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
 		:setState(FormatString:process(eval(savedState) and savedState or "Workspace: $WORKSPACE"))
 		:setImage("studio");
-	
+
+	if eval(Data:Get("EnabledTS")) then
+		Activity:setTimer();
+	end;
+
 	for _, button in pairs(Data:Get("Buttons") or {}) do
 		-- Semi-Blank labels aren't allowed.
 		if not (eval(button.label) and eval(button.url)) then continue end;
