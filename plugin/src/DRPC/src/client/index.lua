@@ -33,10 +33,10 @@ end;
 
 -- Initiate with cb -> callback(success<bool>, response<string>);
 function client:login(cb)
-	self.Enabled = true;
+	local enabled = Data:Get("Enabled");
 
 	local success, reply;
-	if Data:Get("Enabled") then
+	if enabled or enabled == nil then
 		success, reply = self:Open();
 	else
 		success = false;
@@ -46,8 +46,7 @@ function client:login(cb)
 		while 1 do
 			wait(2.6); -- Accuracy un-necessary.
 			
-			if Data:Get("Enabled") then
-				print(ActivityCreator:Get());
+			if enabled or enabled == nil then
 				self:SetActivity();
 			end;
 		end;

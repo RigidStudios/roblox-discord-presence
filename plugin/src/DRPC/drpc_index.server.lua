@@ -19,8 +19,6 @@ end);
 
 UI:Start();
 
-print("Logging in.");
-
 ClientObj:login(function(success)
 	if success then
 		warn("DRPC v1 by RigidStudios#6315 - Launched.");

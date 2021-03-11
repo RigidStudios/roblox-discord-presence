@@ -7,10 +7,6 @@ function httpClient.new(url)
 end;
 
 function httpClient:Post(requestBody)
-	print("I am cheating death after all");
-	print(debug.traceback());
-	print(requestBody);
-
 	local success, reply = pcall(function()
 		return HTTP:PostAsync(self.URL, HTTP:JSONEncode(requestBody));
 	end);

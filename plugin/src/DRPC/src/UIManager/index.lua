@@ -18,8 +18,6 @@ function UI:Start()
 	settingsGui.Title   = "DRPC Settings";
 	settingsGui.Enabled = true;
 
-	print(settingsGui)
-
 	-- Resize Controller Init.
 	require(DRPC.src.UIManager.resizeController):Init(settingsGui);
 	local toggleController = require(DRPC.src.UIManager.toggleController):Init(settingsGui.Container.Enable.Container.Switch);
@@ -59,8 +57,6 @@ function UI:Start()
 
 	local infoVersion = settingsGui.Container.Info.Version;
 	infoVersion.Text = "v0.2.0-alpha";
-
-	print("Finished.")
 end;
 
 return UI;
