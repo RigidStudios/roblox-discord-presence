@@ -19,7 +19,6 @@ local Http   = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
 
 Data:AttachChange("Enabled", function(isEnabled)
-	warn("Activation set to:", isEnabled);
 	if isEnabled then ClientObj:Open() else ClientObj:Close() end;
 end);
 

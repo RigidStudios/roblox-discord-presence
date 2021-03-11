@@ -14,7 +14,7 @@ end;
 
 function module:Init(element)
     local enabled = Data:Get("Enabled");
-    self:Move(element.Value, enabled or enabled == nil);
+    Data:Set("Enabled", self:Move(element.Value, enabled or enabled == nil));
 
 	element.MouseButton1Click:Connect(self:onClick(element.Value));
     element.Value.MouseButton1Click:Connect(self:onClick(element.Value));
