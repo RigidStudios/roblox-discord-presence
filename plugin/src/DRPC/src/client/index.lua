@@ -11,6 +11,7 @@ function client.new(Http, _debug)
 end;
 
 function client:Close()
+	self.Enabled = false;
 	self.Http:Post({
 		updateType = "CLOSE";
 	});
@@ -24,6 +25,7 @@ function client:SetActivity()
 end;
 
 function client:Open()
+	self.Enabled = true;
 	return self:SetActivity();
 end;
 
@@ -42,7 +44,7 @@ function client:login(cb)
 		while 1 do
 			wait(2.6); -- Accuracy un-necessary.
 			
-			if enabled or enabled == nil then
+			if self.Enabled then
 				self:SetActivity();
 			end;
 		end;
