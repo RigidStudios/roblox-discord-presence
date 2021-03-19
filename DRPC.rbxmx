@@ -1,14 +1,14 @@
 <roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXA6058D6BD7A34B85BF9F16E20D732167">
+	<Item class="Folder" referent="RBXD7739CB7345849E8977D1BCAB2BE0181">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">DRPC</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Script" referent="RBXAFD739BE996F496D9DFC45CC5292225D">
+		<Item class="Script" referent="RBX34F1FCD6EE5F42A8B40A2130AF517EAB">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<bool name="Disabled">false</bool>
@@ -28,12 +28,9 @@ for i,v in ipairs(DRPC:GetDescendants()) do
 	end
 end
 
-local Data    = require(DRPC.src.dataHandler);
-Data.plugin   = plugin;
-local UI      = require(DRPC.src.ui.index);
-UI.plugin     = plugin;
-local Client  = require(DRPC.src.client.index);
-Client.plugin = plugin;
+local Data   = require(DRPC.src.dataHandler);
+local UI     = require(DRPC.src.ui.index);
+local Client = require(DRPC.src.client.index);
 
 local Http      = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
@@ -43,6 +40,11 @@ Data:AttachChange("Enabled", function(isEnabled)
 end);
 
 UI:Start();
+
+plugin.Unloading:Connect(function()
+	ClientObj.Enabled = false;
+	ClientObj.Terminated = true;
+end);
 
 ClientObj:login(function(success)
 	if success then
@@ -57,14 +59,14 @@ end);
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBXB54655170CB7454FB6C8D2F238423F96">
+		<Item class="Folder" referent="RBXDB4CBDA3E84F45E48DAFDADC0CDC12E0">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">src</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXE4026B4F7CF8493FB59C82F0329AACF5">
+			<Item class="ModuleScript" referent="RBX7DAB310B2AA84FD69B219FFCE22D317A">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
@@ -139,14 +141,14 @@ return activity;]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Folder" referent="RBXCBC785F7307E40E8A0F515A3C503B372">
+			<Item class="Folder" referent="RBX34188DC934134995933BA36A04BFD421">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<string name="Name">client</string>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBXAA70036BE50E4FA996B30B6A410DC950">
+				<Item class="ModuleScript" referent="RBX8078B62C809C46B79365B7943177E60C">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -201,6 +203,10 @@ function client:login(cb)
 			if self.Enabled then
 				self:SetActivity();
 			end;
+
+			if self.Terminated then
+				break;
+			end;
 		end;
 	end);
 
@@ -220,7 +226,7 @@ return client;
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="ModuleScript" referent="RBX60141CE7D19D4D2CBD9F060C34C7D07A">
+			<Item class="ModuleScript" referent="RBX2416054B00F542C4A8FC2604F864E549">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
@@ -270,14 +276,14 @@ return dataHandler;]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Folder" referent="RBX6D216BEA16564EBA93AB78A8146F1B38">
+			<Item class="Folder" referent="RBXDF7098AE4D3A4A89BDF236A5ED358DFB">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<string name="Name">generators</string>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBX4E4D64E583B44E9296BF89BD6B25D39C">
+				<Item class="ModuleScript" referent="RBX3DA8CFECF23F4D218987598E1BD9266D">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -330,7 +336,7 @@ return activityCreator;
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBXE0A6A68E55574ABB8644F5C92FE9552E">
+				<Item class="ModuleScript" referent="RBX2C38AB00527445628C6EFE27FF83276B">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -389,7 +395,7 @@ return formatString;
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="ModuleScript" referent="RBX0868CDB60E224832A1371B3AE33DBBA1">
+			<Item class="ModuleScript" referent="RBX48C68611BE444B2A9E6FE6AE6974E254">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
@@ -421,7 +427,7 @@ return httpClient;
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXB8A9A212842C46E48418B3CF1F295D6A">
+			<Item class="ModuleScript" referent="RBX108ED5248681466EB5DB4B4F10530D46">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
@@ -479,14 +485,14 @@ return util;]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Folder" referent="RBX28BEC8987AD74A588D8DB73EDB4A9DEF">
+			<Item class="Folder" referent="RBX1F56E49BA6F247B7A63E0388CA40C992">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<string name="Name">ui</string>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBX33190E88D78E4AF2AC56358EE572D099">
+				<Item class="ModuleScript" referent="RBX7F913790527B4F58B66D4D6499BD7A13">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -560,7 +566,7 @@ return UI;]]></ProtectedString>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBX99FEBA5CA49F4F728EFC89F61D3CBD13">
+				<Item class="ModuleScript" referent="RBX353E7B55FF764AEBBB6FCEB30A1CF7B4">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -593,7 +599,7 @@ return module
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBXF9C08231E87343BEBDC608EDD45E7954">
+				<Item class="ModuleScript" referent="RBX7FF17BB5DEA84A108728ABFAED1CFDBB">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -651,14 +657,14 @@ return module;
 				</Item>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX5061CBF22D784391BC66F0DF7675C232">
+		<Item class="Folder" referent="RBX76882DF7AA904B2DAB296D01F33BCF8F">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">assets</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="Frame" referent="RBXBFB9BA4CAB46477B89C9ED45409F439F">
+			<Item class="Frame" referent="RBX73457E92E15643BE9CED52E58014F816">
 				<Properties>
 					<bool name="Active">false</bool>
 					<Vector2 name="AnchorPoint">
@@ -712,7 +718,7 @@ return module;
 					<bool name="Visible">true</bool>
 					<int name="ZIndex">2</int>
 				</Properties>
-				<Item class="ScrollingFrame" referent="RBX09514450DF3347C083DBAE6FC9A54298">
+				<Item class="ScrollingFrame" referent="RBXE7210B44A2094446AD3679193CEFEBED">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -792,7 +798,7 @@ return module;
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">2</int>
 					</Properties>
-					<Item class="UIListLayout" referent="RBXA24A1E9E75DF4AAABF524DC2960EA2FF">
+					<Item class="UIListLayout" referent="RBX78A900DA027E46B2BCA3C8A9BEF65762">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<token name="FillDirection">1</token>
@@ -808,7 +814,7 @@ return module;
 							<token name="VerticalAlignment">1</token>
 						</Properties>
 					</Item>
-					<Item class="UIPadding" referent="RBX16BE71691711447BBE05E7BE1DDCFC81">
+					<Item class="UIPadding" referent="RBXA3417902B2604FBAB96BA387AECC7ADD">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<string name="Name">UIPadding</string>
@@ -832,7 +838,7 @@ return module;
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="Frame" referent="RBXC1D4D93DF7E04518AB3A239EC70A13DD">
+					<Item class="Frame" referent="RBX3DDD1DC070D34F00A81F45E0F944483B">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -886,7 +892,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBX6C4A9ADA70E442FA9432B1118695E4C4">
+						<Item class="Frame" referent="RBXBF8D65564EF94CBDBCD11DD69CAADFF0">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -940,7 +946,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX1418C8C15BB044DEB6E93B934CC4EA02">
+							<Item class="Frame" referent="RBX72717724D57E44EF9377FC98358B8D18">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -995,7 +1001,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="Frame" referent="RBX3B239A815DF642D89FD94AE6A7072A52">
+							<Item class="Frame" referent="RBX133F73FAB4184708B8185A7C21899C48">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -1049,7 +1055,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="TextLabel" referent="RBXBFADB9338C954878A53DC7A916327788">
+								<Item class="TextLabel" referent="RBXC4AB71A9A81941E8A737B3EEAD34603B">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -1126,7 +1132,7 @@ return module;
 										<int name="ZIndex">50</int>
 									</Properties>
 								</Item>
-								<Item class="UIListLayout" referent="RBXCF2669919DE04A1EB04F56CF513967C4">
+								<Item class="UIListLayout" referent="RBXE3F8A84DA24B4209961595DD37EB5D20">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<token name="FillDirection">1</token>
@@ -1143,7 +1149,7 @@ return module;
 									</Properties>
 								</Item>
 							</Item>
-							<Item class="ImageButton" referent="RBX8C699748F9F04F84A619102BE9D6F9E5">
+							<Item class="ImageButton" referent="RBX51E3899820A44BD89F75C69007F3695F">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -1235,7 +1241,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="UIPadding" referent="RBXB6BCCCCEC9774D638E3969DCF2704D74">
+								<Item class="UIPadding" referent="RBX3E234D40C8644532A458FAE575CBF3CD">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<string name="Name">UIPadding</string>
@@ -1259,7 +1265,7 @@ return module;
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="ImageButton" referent="RBX48DE0B5ADE3D4BEABA78358C785EBF11">
+								<Item class="ImageButton" referent="RBX08717CBF3F3346618F45E63AC7664398">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -1351,7 +1357,7 @@ return module;
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">51</int>
 									</Properties>
-									<Item class="UIAspectRatioConstraint" referent="RBXADD9404B55D5468487CF8A56DF71690C">
+									<Item class="UIAspectRatioConstraint" referent="RBX8DD854E7A78741169FE63B3A0AD34690">
 										<Properties>
 											<float name="AspectRatio">1</float>
 											<token name="AspectType">0</token>
@@ -1362,7 +1368,7 @@ return module;
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="UICorner" referent="RBX1B3F99984C5C4F09800A247A92FE3502">
+									<Item class="UICorner" referent="RBX13D6BAF0FC8743068D967FACD9B397D1">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<UDim name="CornerRadius">
@@ -1375,7 +1381,7 @@ return module;
 										</Properties>
 									</Item>
 								</Item>
-								<Item class="UICorner" referent="RBX96683EECED534B4CA9731CEDBD9A91C0">
+								<Item class="UICorner" referent="RBX5CF3985EC8F84AD58A80E6AECA9DEA41">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<UDim name="CornerRadius">
@@ -1390,7 +1396,7 @@ return module;
 							</Item>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXD72F64BD46594CABA61986D0B07816F5">
+					<Item class="Frame" referent="RBX714EFFAF31194362A50C33C5ADA6DC78">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1444,7 +1450,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBX6A0E5E6EF0BE4A22B8EFEEA80772A10C">
+						<Item class="TextLabel" referent="RBX075736010BDC454CB4ECAA942804CEDA">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1522,7 +1528,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX0507686654E440608AE73E3B07F0E27C">
+					<Item class="Frame" referent="RBXBE2AA4415D9847C48727D84893CB5AD6">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1576,7 +1582,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBXAF31BFCD5FC24A1685C1E87E9343B945">
+						<Item class="TextLabel" referent="RBXF5E948529A2E403293D904F0F8A1FD0E">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1654,7 +1660,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXCC18E2D567C74D8AA438405C88AB87AB">
+					<Item class="Frame" referent="RBX3B678798754047FA98FBF408A738FEC2">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1708,7 +1714,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBX131AD68339D04BA18FB2CF1416B9FD89">
+						<Item class="Frame" referent="RBXE069664AC2C24A888D725467651855F4">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1763,7 +1769,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="TextBox" referent="RBX7074AA84C2CE49F888AB399D0FCC1FE6">
+						<Item class="TextBox" referent="RBXA65E27B771FC4501A158715B30308A26">
 							<Properties>
 								<bool name="Active">true</bool>
 								<Vector2 name="AnchorPoint">
@@ -1851,7 +1857,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX8F71414BEA8A4F0CA9E5BC2D669C1E3F">
+					<Item class="Frame" referent="RBX6F4FF47B9AD64A8EA61F5F031A8FF5D4">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1905,7 +1911,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBX0C1732A5C39B4D88B621C1B632E89EC8">
+						<Item class="TextLabel" referent="RBX9CD8448E9DBF46BAA967D959F04516C4">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1983,7 +1989,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXA0ADEC5B6B374A1FA6970302549EF6D7">
+					<Item class="Frame" referent="RBXDF580300F7DD40C69FD090788C7C2EF8">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -2037,7 +2043,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBX4EE327C06A714044B0298531C34A5C47">
+						<Item class="TextLabel" referent="RBXDE9D6CEF04464D588BEECFDEC3F308C3">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2115,7 +2121,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXE0A85CCE4DF94CBEAACD2E22C96342AF">
+					<Item class="Frame" referent="RBXA1A479E6E019482FBE4B0CD6660ACDBC">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -2169,7 +2175,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBXDC216FCE3F31437BAD700C02CD64BC57">
+						<Item class="Frame" referent="RBXAF1AA077EACE4272B90D686C532F09FB">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2223,7 +2229,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBXDD9805D6E92140C399390D272ECD6989">
+							<Item class="Frame" referent="RBX97A1C00D97CC48068D3CEFC04FE22A2E">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2278,7 +2284,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBX6306C10131394929AF009B85AAB4BDC9">
+							<Item class="TextBox" referent="RBX1E72DB96C67940829DB0A52A33B90CA9">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -2366,7 +2372,7 @@ return module;
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Frame" referent="RBX0056AE9CFEF84481A387A4F69AB7C0E2">
+						<Item class="Frame" referent="RBX414CEC60F4D3441189D1B0DD67B90ECA">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2420,7 +2426,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBXEC2220561AC0465A813F7EE11B0FB5BF">
+							<Item class="Frame" referent="RBX4E6EF0483F4E45E09542A7D1F962F8E5">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2475,7 +2481,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBXA75AAF4E560642CA8D050687DAB25CAA">
+							<Item class="TextBox" referent="RBXF77762827A0E466A87D411B24446239B">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -2564,7 +2570,7 @@ return module;
 							</Item>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXC493F568DD5D475486225A39CAC888F8">
+					<Item class="Frame" referent="RBX44297069CCAD42CD964B8FDAECF0EA31">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -2618,7 +2624,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBX367DBD4546CA465FA4DE254B5B5A57EE">
+						<Item class="Frame" referent="RBXDAD84D07342E48DF9716F3A133FBDCBD">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2672,7 +2678,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX7A757E2A547F4B61922AAF67CF1362AD">
+							<Item class="Frame" referent="RBX85AC069937024CAC9CBDB4BF2F7A1CE1">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2727,7 +2733,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBX3DA6B475546841F8A45A11B13F0777BD">
+							<Item class="TextBox" referent="RBX47B12C733C3241CCB12C2CFEB6B99B0A">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -2815,7 +2821,7 @@ return module;
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Frame" referent="RBXE8A55670EE7A4A4EBEE6E3BECB19FAA5">
+						<Item class="Frame" referent="RBXA8DB522CABA04E98A723895E59AA6772">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2869,7 +2875,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX7C512FD56D52490B8784EF24AAB9C0AB">
+							<Item class="Frame" referent="RBX967EA6E864994ABD94A584E542C74D39">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2924,7 +2930,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBX58106A3893CD4CA7AE8487F21C139EFF">
+							<Item class="TextBox" referent="RBXCBAD885F130C44AD9C10D47320C985CB">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -3013,7 +3019,7 @@ return module;
 							</Item>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX6134483706A74766AC309A7A4C79E2FE">
+					<Item class="Frame" referent="RBX861F3CCAB13C48A9BA2AF4C1F583E938">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3067,7 +3073,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBX178A75D6FAF24CE8963C2C42D5C7D4A3">
+						<Item class="TextLabel" referent="RBX8EA815CBF48E4B149C31F0E477BEDEEF">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3144,7 +3150,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="TextLabel" referent="RBX05349A95CC424FC792B9164CF20C799B">
+						<Item class="TextLabel" referent="RBXA5528C70CDF44EC18493E88AAF25177B">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3221,7 +3227,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="UIListLayout" referent="RBXAEA5F7C527454C8BAE0A15754E6E8D3A">
+						<Item class="UIListLayout" referent="RBX615337905A6D435B9EBF72255D76FCA0">
 							<Properties>
 								<BinaryString name="AttributesSerialize"></BinaryString>
 								<token name="FillDirection">1</token>
@@ -3238,7 +3244,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX3E74EDB32D044706A9A1AB4939246721">
+					<Item class="Frame" referent="RBX7ADEC75555FF4885AC99942C7552D220">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3292,7 +3298,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBXF6078CA130B942049DC846A32096EDED">
+						<Item class="TextLabel" referent="RBXC90DA4652B6B40CFA9EA612CA4AA7DE2">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3370,7 +3376,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX9728DF04BD7E4AEC8B872244E57B16D2">
+					<Item class="Frame" referent="RBX299C2E9360454589891890B0800770EA">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3424,7 +3430,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBXCF6D4DF89AB049CBA8CCC345B9C6287B">
+						<Item class="Frame" referent="RBX946128B72F9247D98F071C49943E3C77">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3479,7 +3485,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="TextBox" referent="RBXC53320C228C64EF7929E185EECC5AD62">
+						<Item class="TextBox" referent="RBXC9BB22DC350F4C5BBDBF1B5C61FFD364">
 							<Properties>
 								<bool name="Active">true</bool>
 								<Vector2 name="AnchorPoint">
@@ -3567,7 +3573,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX75F389011AB442F28E026A4BA6F021E8">
+					<Item class="Frame" referent="RBXDC5E0492400D49BB961DF896E9F99529">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3621,7 +3627,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBXB698534741794EC2B3556A9488DAACD4">
+						<Item class="Frame" referent="RBX3FF73DA0BE1B4C9C866AC1B32C7083E0">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3675,7 +3681,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX00478B4557824486B98E107AB33C13E6">
+							<Item class="Frame" referent="RBX41F058A196114CECA774BF776058B7F8">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -3730,7 +3736,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="Frame" referent="RBX37B80D382A96403C83DCC325C498B52C">
+							<Item class="Frame" referent="RBX598A5B1B0D35481C80D385B0DA2D7731">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -3784,7 +3790,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="TextLabel" referent="RBX18B16F1387A64B07B80A380CABB2EFB6">
+								<Item class="TextLabel" referent="RBX01B21626599E43D6A91D75FA5C1A1236">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -3861,7 +3867,7 @@ return module;
 										<int name="ZIndex">50</int>
 									</Properties>
 								</Item>
-								<Item class="UIListLayout" referent="RBX4F793C1E85804430A94808C8B218D369">
+								<Item class="UIListLayout" referent="RBXACFE8F116CBF4FEEA67AA765CF9BBC14">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<token name="FillDirection">1</token>
@@ -3878,7 +3884,7 @@ return module;
 									</Properties>
 								</Item>
 							</Item>
-							<Item class="ImageButton" referent="RBX001D9CD6DB014153BFA7732C14278B40">
+							<Item class="ImageButton" referent="RBX7B40AF6D198D4903AE7A107F9593A305">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -3970,7 +3976,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="UIPadding" referent="RBX5B460A0378E24424BB75F7AF43773023">
+								<Item class="UIPadding" referent="RBXD265CD6CD4A5493C932A52F1F3873B04">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<string name="Name">UIPadding</string>
@@ -3994,7 +4000,7 @@ return module;
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="ImageButton" referent="RBX5083714ED7B947EDB3828645D5FB6E9F">
+								<Item class="ImageButton" referent="RBXEE6A7F2D18C74B3E8132C9BBC3E9525B">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -4086,7 +4092,7 @@ return module;
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">51</int>
 									</Properties>
-									<Item class="UIAspectRatioConstraint" referent="RBX68DE69AD03414C9F87D1943DBFADB272">
+									<Item class="UIAspectRatioConstraint" referent="RBX7FEFF5EFB808438F956885418391AE11">
 										<Properties>
 											<float name="AspectRatio">1</float>
 											<token name="AspectType">0</token>
@@ -4097,7 +4103,7 @@ return module;
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="UICorner" referent="RBX63446477B41543B9AD9EB3D9C7F92B13">
+									<Item class="UICorner" referent="RBXFBA115081A774D2D93D5AF2C3080CF1F">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<UDim name="CornerRadius">
@@ -4110,7 +4116,7 @@ return module;
 										</Properties>
 									</Item>
 								</Item>
-								<Item class="UICorner" referent="RBX36B41844C4244E479978B00B778213F3">
+								<Item class="UICorner" referent="RBXD0D0959ED5394213908EB7FADFF6D90A">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<UDim name="CornerRadius">
@@ -4126,7 +4132,7 @@ return module;
 						</Item>
 					</Item>
 				</Item>
-				<Item class="Frame" referent="RBX44A735CC427247D1B94D72D6138EBBC5">
+				<Item class="Frame" referent="RBX3B8C5D5CEF19470FA09860292D4776AB">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -4180,7 +4186,7 @@ return module;
 						<bool name="Visible">false</bool>
 						<int name="ZIndex">1</int>
 					</Properties>
-					<Item class="Frame" referent="RBX60E8A8E52D374756ACDF43A3C865312B">
+					<Item class="Frame" referent="RBXAF498E9D2BFA461FBCCAC09CA1E55D00">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
