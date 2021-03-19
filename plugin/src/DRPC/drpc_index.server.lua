@@ -4,10 +4,10 @@ local env = {
 	["plugin"] = plugin
 }
 
-for i,v in ipairs(DRPC:GetDescendants()) do
-	if v:IsA("ModuleScript") then
-		local m = require(v)
-		setmetatable(m,{__index = env})
+for i, object in ipairs(DRPC:GetDescendants()) do
+	if object:IsA("ModuleScript") then
+		local module = require(object)
+		setmetatable(module, { __index = env })
 	end
 end
 

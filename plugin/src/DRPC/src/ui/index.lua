@@ -9,60 +9,88 @@ function UI:ProvidePlugin(plugin)
 	self.plugin = plugin;
 end;
 
-function UI:Start()
-	if not self.plugin then return end;
-	
-	local settingsGui = self.plugin:CreateDockWidgetPluginGui("settingsGui", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false));
-	
-	Assets.UI:Clone().Parent = settingsGui;
-	settingsGui.Title   = "DRPC Settings";
-	settingsGui.ResetOnSpawn = false;
-	settingsGui.Enabled = true;
-	settingsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	
+function UI:CreateControllers(settingsGui)
 	-- Window Controller Init.
 	require(DRPC.src.ui.windowController):Init(settingsGui);
 
 	-- Resize Controller Init.
 	require(DRPC.src.ui.resizeController):Init(settingsGui);
+
+	-- Toggles Init.
 	local toggleController = require(DRPC.src.ui.toggleController);
 	toggleController.new("Enabled"):Init(settingsGui.UI.Container.Enable.Container.Switch);
 	toggleController.new("EnabledTS"):Init(settingsGui.UI.Container.EnableTS.Container.Switch);
+end;
 
-	local descriptionEditor = settingsGui.UI.Container.DescriptionInput.Input;
-	descriptionEditor.Text = Data:Get("Description") or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES Lines)";
-	descriptionEditor.FocusLost:Connect(function()
-		Data:Set("Description", descriptionEditor.Text);
+function UI:CreateInputField(field, dataName, default)
+	field.Text = Data:Get(dataName) or default;
+	field.FocusLost:Connect(function()
+		Data:Set(dataName, field.Text);
 	end);
-	
-	local statusEditor = settingsGui.UI.Container.StateInput.Input;
-	statusEditor.Text = Data:Get("State") or "Workspace: $WORKSPACE";
-	statusEditor.FocusLost:Connect(function()
-		Data:Set("State", statusEditor.Text);
-	end);
-	
-	local savedButtons = Data:Get("Buttons") or {};
-	local button1 = settingsGui.UI.Container.Button1;
-	local button2 = settingsGui.UI.Container.Button2;
-	button1.Second.Input.Text = savedButtons[1] and savedButtons[1].label or "";
-	button2.Second.Input.Text = savedButtons[2] and savedButtons[2].label or "";
-	button1.First.Input.Text = savedButtons[1] and savedButtons[1].url or "";
-	button2.First.Input.Text = savedButtons[2] and savedButtons[2].url or "";
+end;
 
-	local function setLabel(i, prop, value)
-		if not savedButtons[i] then
-			savedButtons[i] = {};
+function UI:CreateUI()
+	if not self.plugin then return error("[Discord-RPC] UI Launched before plugin apparition.") end;
+
+	local settingsGui: DockWidgetPluginGui = self.plugin:CreateDockWidgetPluginGui(
+		"settingsGui",
+		DockWidgetPluginGuiInfo.new(
+			Enum.InitialDockState.Float,
+			false,
+			false
+		)
+	);
+
+	Assets.UI:Clone().Parent = settingsGui;
+
+	settingsGui.Enabled = true;
+	settingsGui.Title = "DRPC Settings";
+	settingsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
+
+	settingsGui:BindToClose(function()
+		settingsGui.Enabled = false;
+		Data:Set("GUI_Open", false);
+	end);
+
+	return settingsGui;
+end;
+
+function UI:CreateButtonInputController(dataButtons, buttonInput, index, subIndex)
+	buttonInput.Text = dataButtons[index] and dataButtons[index][subIndex] or "";
+
+	buttonInput.FocusLost:Connect(function()
+		if not dataButtons[index] then
+			dataButtons[index] = {};
 		end;
-		savedButtons[i][prop] = value;
-		Data:Set("Buttons", savedButtons);
-	end;
-	
-	button1.Second.Input.FocusLost:Connect(function() setLabel(1, "label", button1.Second.Input.Text) end);
-	button2.Second.Input.FocusLost:Connect(function() setLabel(2, "label", button2.Second.Input.Text) end);
-	button1.First.Input.FocusLost:Connect(function() setLabel(1, "url", button1.First.Input.Text) end);
-	button2.First.Input.FocusLost:Connect(function() setLabel(2, "url", button2.First.Input.Text) end);
 
-	local infoVersion = settingsGui.UI.Container.Info.Version;
+		buttonInput[index][subIndex] = buttonInput.Text;
+
+		Data:Set("Buttons", dataButtons);
+	end);
+end;
+
+function UI:Start()
+	self.settingsGui = self:CreateUI();
+
+	-- Window Scroll/Field Resize/Toggle Handler
+	self:CreateControllers(self.settingsGui);
+
+	-- Input Fields
+	self:CreateInputField(self.settingsGui.UI.Container.DescriptionInput.Input, "Description", "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES lines)");
+	self:CreateInputField(self.settingsGui.UI.Container.StateInput.Input, "State", "Workspace: $WORKSPACE");
+
+	-- Buttons
+	local savedButtons = Data:Get("Buttons") or {};
+	local button1 = self.settingsGui.UI.Container.Button1;
+	local button2 = self.settingsGui.UI.Container.Button2;
+
+	self:CreateButtonInputController(savedButtons, button1.First.Input, 1, "url");
+	self:CreateButtonInputController(savedButtons, button2.First.Input, 2, "url");
+	self:CreateButtonInputController(savedButtons, button1.Second.Input, 1, "label");
+	self:CreateButtonInputController(savedButtons, button2.Second.Input, 2, "label");
+
+	-- Version Indicator
+	local infoVersion = self.settingsGui.UI.Container.Info.Version;
 	infoVersion.Text = "v0.2.1-alpha";
 end;
 
