@@ -16,7 +16,12 @@ function UI:Start()
 	
 	Assets.UI:Clone().Parent = settingsGui;
 	settingsGui.Title   = "DRPC Settings";
+	settingsGui.ResetOnSpawn = false;
 	settingsGui.Enabled = true;
+	settingsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	
+	-- Window Controller Init.
+	require(DRPC.src.ui.windowController):Init(settingsGui);
 
 	-- Resize Controller Init.
 	require(DRPC.src.ui.resizeController):Init(settingsGui);
