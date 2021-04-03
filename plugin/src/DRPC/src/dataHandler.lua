@@ -16,7 +16,7 @@ function dataHandler:Get(key)
 	local data = self.data[key];
 	if data == nil or data == "" then
 		data = self.plugin:GetSetting(key);
-		
+
 		self.data[key] = data;
 	end;
 
@@ -25,7 +25,7 @@ end;
 
 function dataHandler:AttachChange(key, func)
 	if not self.attachments[key] then self.attachments[key] = {} end;
-	
+
 	table.insert(self.attachments[key], func);
 end;
 
@@ -33,7 +33,7 @@ function dataHandler:Save()
 	for key, value in pairs(self.data) do
 		self.plugin:SetSetting(key, value);
 	end;
-	
+
 	return dataHandler;
 end;
 
