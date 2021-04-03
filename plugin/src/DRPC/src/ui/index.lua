@@ -43,7 +43,6 @@ function UI:CreateUI()
 
 	Assets.UI:Clone().Parent = settingsGui;
 
-	settingsGui.Enabled = true;
 	settingsGui.Title = "DRPC Settings";
 	settingsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
 
@@ -63,7 +62,7 @@ function UI:CreateButtonInputController(dataButtons, buttonInput, index, subInde
 			dataButtons[index] = {};
 		end;
 
-		buttonInput[index][subIndex] = buttonInput.Text;
+		dataButtons[index][subIndex] = buttonInput.Text;
 
 		Data:Set("Buttons", dataButtons);
 	end);
