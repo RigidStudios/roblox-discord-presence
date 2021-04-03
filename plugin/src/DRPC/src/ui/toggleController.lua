@@ -6,7 +6,9 @@ local Data = require(DRPC.src.dataHandler);
 local rs = game:GetService("RunService").RenderStepped;
 
 function module.new(dataSave)
-    return setmetatable({ dataSave = dataSave }, { __index = module });
+    local self = setmetatable({ dataSave = dataSave, wasEnabled = nil }, { __index = module });
+
+    return self;
 end
 
 function module:onClick(element)
@@ -18,6 +20,12 @@ end;
 function module:Init(element)
     local enabled = Data:Get(self.dataSave);
     Data:Set(self.dataSave, self:Move(element.Value, enabled or enabled == nil));
+
+    Data:AttachChange(self.dataSave, function(newData)
+        if self.wasEnabled ~= newData then
+            self:Move(element.Value, newData);
+        end;
+    end);
 
 	element.MouseButton1Click:Connect(self:onClick(element.Value));
     element.Value.MouseButton1Click:Connect(self:onClick(element.Value));
@@ -37,6 +45,7 @@ function module:Move(element, enabled)
             rs:Wait();
         end;
     end;
+    self.wasEnabled = enabled;
 
     element.Parent.Parent.Text.Title.Text = enabled and "Enabled" or "Disabled";
     return not not enabled;
