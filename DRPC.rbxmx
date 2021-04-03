@@ -1,36 +1,37 @@
 <roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBXD7739CB7345849E8977D1BCAB2BE0181">
+	<Item class="Folder" referent="RBX4D5DAD9466534B3BABF81AFC88BF4125">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<string name="Name">DRPC</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Script" referent="RBX34F1FCD6EE5F42A8B40A2130AF517EAB">
+		<Item class="Script" referent="RBX013DF0FAB5984E8088132AFAA31685DE">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<bool name="Disabled">false</bool>
 				<Content name="LinkedSource"><null></null></Content>
 				<string name="Name">drpc_index</string>
-				<string name="ScriptGuid">{FA36BD89-EAF5-45FC-A2C5-B7DD646EF89E}</string>
+				<string name="ScriptGuid">{064A3310-9B61-4C9D-8BA8-1DA8E0BF37DD}</string>
 				<ProtectedString name="Source"><![CDATA[local DRPC = script:FindFirstAncestor("DRPC");
 
 local env = {
 	["plugin"] = plugin
 }
 
-for i,v in ipairs(DRPC:GetDescendants()) do
-	if v:IsA("ModuleScript") then
-		local m = require(v)
-		setmetatable(m,{__index = env})
+for i, object in ipairs(DRPC:GetDescendants()) do
+	if object:IsA("ModuleScript") then
+		local module = require(object)
+		setmetatable(module, { __index = env })
 	end
 end
 
 local Data   = require(DRPC.src.dataHandler);
 local UI     = require(DRPC.src.ui.index);
 local Client = require(DRPC.src.client.index);
+local Plugin = require(DRPC.src.generators.pluginManager);
 
 local Http      = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
@@ -40,6 +41,7 @@ Data:AttachChange("Enabled", function(isEnabled)
 end);
 
 UI:Start();
+Plugin:Init(plugin);
 
 plugin.Unloading:Connect(function()
 	ClientObj.Enabled = false;
@@ -59,19 +61,77 @@ end);
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBXDB4CBDA3E84F45E48DAFDADC0CDC12E0">
+		<Item class="Folder" referent="RBX12C9E90C3B8846F2BF40B5C9D0E51AC9">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">src</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX7DAB310B2AA84FD69B219FFCE22D317A">
+			<Item class="ModuleScript" referent="RBX248FD333420749ADA7237C7691978DD9">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">util</string>
+					<string name="ScriptGuid">{90C586F7-0B93-4E6F-A73A-1DF10398A137}</string>
+					<ProtectedString name="Source"><![CDATA[local util = {};
+local DRPC = script:FindFirstAncestor("DRPC");
+
+local Data = require(DRPC.src.dataHandler);
+
+-- Get place (Used for name later)
+local success, place = pcall(function()
+	return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId);
+end);
+
+-- If offline, above fetch will have failed, remedy that by just getting the game.
+if not success then
+	place = game
+end;
+
+util.place = place;
+
+function util.getPlaceName()
+	return util.place.Name;
+end;
+
+local lastEdit = tick();
+local lastScript = game:GetService("StudioService").ActiveScript;
+local lastLen = 0;
+function util.hasChanges()
+	local s = game:GetService("StudioService").ActiveScript;
+	local changes = false;
+
+	if s then
+		local len = #s.Source:split("\n");
+		
+		if s ~= lastScript or lastLen ~= len then
+			lastLen = len;
+			lastScript = s;
+			lastEdit = tick();
+		end;
+		
+		if tick() - lastEdit > 180 then
+			changes = false;
+		else
+			changes = true;
+		end;
+	end;
+	
+	return changes;
+end;
+
+return util;]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX7AD2542C81894966AF518A9C428B1A8F">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">activity</string>
-					<string name="ScriptGuid">{5EEA61B4-C12F-4390-A46F-AD12CA11F691}</string>
+					<string name="ScriptGuid">{AB531CBF-B885-4F71-8FDF-45E2275E701E}</string>
 					<ProtectedString name="Source"><![CDATA[local activity = {};
 local startTick = tick();
 
@@ -141,19 +201,257 @@ return activity;]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Folder" referent="RBX34188DC934134995933BA36A04BFD421">
+			<Item class="ModuleScript" referent="RBX38FA0546AC79478191BAE68A126CF707">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">httpClient</string>
+					<string name="ScriptGuid">{DA3EDF63-EE01-4AC0-8BCA-0FA25937B29F}</string>
+					<ProtectedString name="Source"><![CDATA[local httpClient = {};
+local HTTP = game:GetService("HttpService");
+
+function httpClient.new(url)
+	local self = setmetatable({ URL = url }, { __index = httpClient });
+	return self;
+end;
+
+function httpClient:Post(requestBody)
+    local success, reply = pcall(
+        HTTP.PostAsync,
+        HTTP, self.URL,
+        HTTP:JSONEncode(requestBody)
+    );
+    
+    if not success then
+        warn("[Discord-RPC] HTTP Post failed.");
+    end;
+    
+    return success, reply;
+end;
+
+return httpClient;
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXA59F486DF2D14463A9BFD72D23E2B154">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">dataHandler</string>
+					<string name="ScriptGuid">{5FBF4B83-6435-4C6E-95EC-90F36CB39B8D}</string>
+					<ProtectedString name="Source"><![CDATA[local dataHandler = { data = {}, attachments = {} };
+
+function dataHandler:Set(key, data)
+	self.data[key] = data;
+
+	if self.attachments[key] then
+		for _, func in pairs(self.attachments[key]) do
+			func(data);
+		end;
+	end;
+
+	return data;
+end;
+
+function dataHandler:Get(key)
+	local data = self.data[key];
+	if data == nil or data == "" then
+		data = self.plugin:GetSetting(key);
+
+		self.data[key] = data;
+	end;
+
+	return data;
+end;
+
+function dataHandler:AttachChange(key, func)
+	if not self.attachments[key] then self.attachments[key] = {} end;
+
+	table.insert(self.attachments[key], func);
+end;
+
+function dataHandler:Save()
+	for key, value in pairs(self.data) do
+		self.plugin:SetSetting(key, value);
+	end;
+
+	return dataHandler;
+end;
+
+return dataHandler;]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="Folder" referent="RBXCB04267CAF5E43409A7E56C46951AF38">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<string name="Name">generators</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBX06C433772C3047138236E60828FBAD63">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">activityCreator</string>
+						<string name="ScriptGuid"></string>
+						<ProtectedString name="Source"><![CDATA[local activityCreator = {};
+
+local DRPC = script:FindFirstAncestor("DRPC");
+
+local Activity = require(DRPC.src.activity).new();
+local FormatString = require(DRPC.src.generators.formatString);
+local Data = require(DRPC.src.dataHandler);
+
+function eval(item)
+	if item == "" then return false end;
+	if item == nil then return false end;
+	if item == false then return false end;
+	if item == 0 then return false end;
+	if pcall(function() return #item end) and #item == 0 then return false end;
+	return true;
+end;
+
+function activityCreator:Get()
+	local savedDescription = Data:Get("Description");
+	local savedState = Data:Get("State");
+
+	Activity
+		:clear()
+		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
+		:setState(FormatString:process(eval(savedState) and savedState or "Workspace: $WORKSPACE"))
+		:setImage("studio");
+
+	if eval(Data:Get("EnabledTS")) then
+		Activity:setTimer();
+	end;
+
+	for _, button in pairs(Data:Get("Buttons") or {}) do
+		-- Semi-Blank labels aren't allowed.
+		if not (eval(button.label) and eval(button.url)) then continue end;
+
+		Activity:addButton(FormatString:process(button.label), FormatString:process(button.url));
+	end;
+	
+	return Activity;
+end;
+
+return activityCreator;
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX0DAD4259C1B2451F9ACF244E573C0ACD">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">formatString</string>
+						<string name="ScriptGuid"></string>
+						<ProtectedString name="Source"><![CDATA[local formatString = {};
+local DRPC = script:FindFirstAncestor("DRPC");
+
+local Util = require(DRPC.src.util);
+local StudioService = game:GetService("StudioService");
+
+local Variables = {
+	["%$SCRIPT_NAME"] = {Description = "Name of the current script", Obtain = function(src)
+		if not src then return end;
+		return src.Name;
+	end};
+	["%$SCRIPT_LINES"] = {Description = "Line count of the current script", Obtain = function(src)
+		if not src then return end;
+		return #src.Source:split("\n");
+	end};
+	["%$SCRIPT_PARENT"] = {Description = "Name of the current script's parent", Obtain = function(src)
+		if not src then return end;
+		return src.Parent.Name;
+	end};
+	["%$WORKSPACE"] = {Description = "Name of the current place", Obtain = function(src)
+		return Util.getPlaceName();
+	end};
+	["%$PLACE_ID"] = {Description = "ID of the current place", Obtain = function(src)
+		return Util.place.PlaceId or "0";
+	end};
+	["%$PLACE_PUBLISHED:<>:<>"] = {Description = "If published, first setting, if not, second setting.", Obtain = function(src, publicStr, notPublicStr)
+		-- IsA: member of Instance (only usable when place was set to current game instead of placeInfo.
+		return formatString:process(Util.place.IsA and notPublicStr or publicStr);
+	end};
+	["%$ACTIVITY:<>"] = {Decription = "Away (No Script open), Idle (No Changes recently, <follow> (Editing)", Obtain = function(src, following)
+		return Util.hasChanges() 
+			and formatString:process(following or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)")
+			or  (not StudioService.ActiveScript and "Away" or "Idle...");
+	end};
+};
+
+function formatString:process(str)
+	for identifier, value in pairs(Variables) do
+		str = str:gsub(string.gsub(identifier, "<>", "(.*)"), function(...)
+			return value.Obtain(StudioService.ActiveScript, ...);
+		end);
+	end;
+	
+	return str;
+end;
+
+return formatString;
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX42D74F9C0FAB4F85B777C215029C5824">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">pluginManager</string>
+						<string name="ScriptGuid"></string>
+						<ProtectedString name="Source"><![CDATA[local pluginManager = {};
+
+local DRPC = script:FindFirstAncestor("DRPC");
+local Data = require(DRPC.src.dataHandler);
+local UI = require(DRPC.src.ui.index);
+
+function pluginManager:Init(plugin: Plugin)
+    local toolbar = plugin:CreateToolbar("DRPC by RigidStudios#6315");
+
+    local showButton = toolbar:CreateButton("Settings", "Set the parameters of your activity and toggle the plugin.", "rbxassetid://6540060106", "DRPC Settings");
+
+    local pEnabled = Data:Get("GUI_Open");
+    local enabled = pEnabled == nil and true or pEnabled;
+
+    UI.settingsGui.Enabled = enabled;
+
+    showButton.Click:Connect(function()
+        enabled = not enabled;
+
+        UI.settingsGui.Enabled = enabled;
+        Data:Set("GUI_Open", enabled);
+    end);
+end;
+
+return pluginManager;]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Folder" referent="RBX688AC80A76494700B6C819035353004D">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<string name="Name">client</string>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBX8078B62C809C46B79365B7943177E60C">
+				<Item class="ModuleScript" referent="RBXE01CE9175F2D4AAF9A4A7E543FA0A9F5">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
 						<string name="Name">index</string>
-						<string name="ScriptGuid">{0F814DDC-0AD6-4E3E-9EBF-B2F31E961BF8}</string>
+						<string name="ScriptGuid"></string>
 						<ProtectedString name="Source"><![CDATA[local client = {};
 local DRPC = script:FindFirstAncestor("DRPC");
 
@@ -226,273 +524,14 @@ return client;
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="ModuleScript" referent="RBX2416054B00F542C4A8FC2604F864E549">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<Content name="LinkedSource"><null></null></Content>
-					<string name="Name">dataHandler</string>
-					<string name="ScriptGuid">{BBB5BDA5-35D1-4C9C-99B6-6B0997F765C6}</string>
-					<ProtectedString name="Source"><![CDATA[local dataHandler = { data = {}, attachments = {} };
-
-function dataHandler:Set(key, data)
-	self.data[key] = data;
-
-	if self.attachments[key] then
-		for _, func in pairs(self.attachments[key]) do
-			func(data);
-		end;
-	end;
-
-	return data;
-end;
-
-function dataHandler:Get(key)
-	local data = self.data[key];
-	if data == nil or data == "" then
-		data = self.plugin:GetSetting(key);
-		
-		self.data[key] = data;
-	end;
-
-	return data;
-end;
-
-function dataHandler:AttachChange(key, func)
-	if not self.attachments[key] then self.attachments[key] = {} end;
-	
-	table.insert(self.attachments[key], func);
-end;
-
-function dataHandler:Save()
-	for key, value in pairs(self.data) do
-		self.plugin:SetSetting(key, value);
-	end;
-	
-	return dataHandler;
-end;
-
-return dataHandler;]]></ProtectedString>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-			</Item>
-			<Item class="Folder" referent="RBXDF7098AE4D3A4A89BDF236A5ED358DFB">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<string name="Name">generators</string>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-				<Item class="ModuleScript" referent="RBX3DA8CFECF23F4D218987598E1BD9266D">
-					<Properties>
-						<BinaryString name="AttributesSerialize"></BinaryString>
-						<Content name="LinkedSource"><null></null></Content>
-						<string name="Name">activityCreator</string>
-						<string name="ScriptGuid">{216D0C96-2944-4270-BC73-A0A63AE994FA}</string>
-						<ProtectedString name="Source"><![CDATA[local activityCreator = {};
-
-local DRPC = script:FindFirstAncestor("DRPC");
-
-local Activity = require(DRPC.src.activity).new();
-local FormatString = require(DRPC.src.generators.formatString);
-local Data = require(DRPC.src.dataHandler);
-
-function eval(item)
-	if item == "" then return false end;
-	if item == nil then return false end;
-	if item == false then return false end;
-	if item == 0 then return false end;
-	if pcall(function() return #item end) and #item == 0 then return false end;
-	return true;
-end;
-
-function activityCreator:Get()
-	local savedDescription = Data:Get("Description");
-	local savedState = Data:Get("State");
-
-	Activity
-		:clear()
-		:setDescription(FormatString:process(eval(savedDescription) and savedDescription or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES lines)"))
-		:setState(FormatString:process(eval(savedState) and savedState or "Workspace: $WORKSPACE"))
-		:setImage("studio");
-
-	if eval(Data:Get("EnabledTS")) then
-		Activity:setTimer();
-	end;
-
-	for _, button in pairs(Data:Get("Buttons") or {}) do
-		-- Semi-Blank labels aren't allowed.
-		if not (eval(button.label) and eval(button.url)) then continue end;
-
-		Activity:addButton(FormatString:process(button.label), FormatString:process(button.url));
-	end;
-	
-	return Activity;
-end;
-
-return activityCreator;
-]]></ProtectedString>
-						<int64 name="SourceAssetId">-1</int64>
-						<BinaryString name="Tags"></BinaryString>
-					</Properties>
-				</Item>
-				<Item class="ModuleScript" referent="RBX2C38AB00527445628C6EFE27FF83276B">
-					<Properties>
-						<BinaryString name="AttributesSerialize"></BinaryString>
-						<Content name="LinkedSource"><null></null></Content>
-						<string name="Name">formatString</string>
-						<string name="ScriptGuid">{24CD63F6-D7E7-47CC-83C5-DA69ABB33DB8}</string>
-						<ProtectedString name="Source"><![CDATA[local formatString = {};
-local DRPC = script:FindFirstAncestor("DRPC");
-
-local Util = require(DRPC.src.util);
-local StudioService = game:GetService("StudioService");
-
-local Variables = {
-	["%$SCRIPT_NAME"] = {Description = "Name of the current script", Obtain = function(src)
-		if not src then return end;
-		return src.Name;
-	end};
-	["%$SCRIPT_LINES"] = {Description = "Line count of the current script", Obtain = function(src)
-		if not src then return end;
-		return #src.Source:split("\n");
-	end};
-	["%$SCRIPT_PARENT"] = {Description = "Name of the current script's parent", Obtain = function(src)
-		if not src then return end;
-		return src.Parent.Name;
-	end};
-	["%$WORKSPACE"] = {Description = "Name of the current place", Obtain = function(src)
-		return Util.getPlaceName();
-	end};
-	["%$PLACE_ID"] = {Description = "ID of the current place", Obtain = function(src)
-		return Util.place.PlaceId or "0";
-	end};
-	["%$PLACE_PUBLISHED:<>:<>"] = {Description = "If published, first setting, if not, second setting.", Obtain = function(src, publicStr, notPublicStr)
-		-- IsA: member of Instance (only usable when place was set to current game instead of placeInfo.
-		return formatString:process(Util.place.IsA and notPublicStr or publicStr);
-	end};
-	["%$ACTIVITY:<>"] = {Decription = "Away (No Script open), Idle (No Changes recently, <follow> (Editing)", Obtain = function(src, following)
-		return Util.hasChanges() 
-			and formatString:process(following or "Editing $SCRIPT_NAME ($SCRIPT_LINES lines)")
-			or  (not StudioService.ActiveScript and "Away" or "Idle...");
-	end};
-};
-
-function formatString:process(str)
-	for identifier, value in pairs(Variables) do
-		str = str:gsub(string.gsub(identifier, "<>", "(.*)"), function(...)
-			return value.Obtain(StudioService.ActiveScript, ...);
-		end);
-	end;
-	
-	return str;
-end;
-
-return formatString;
-]]></ProtectedString>
-						<int64 name="SourceAssetId">-1</int64>
-						<BinaryString name="Tags"></BinaryString>
-					</Properties>
-				</Item>
-			</Item>
-			<Item class="ModuleScript" referent="RBX48C68611BE444B2A9E6FE6AE6974E254">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<Content name="LinkedSource"><null></null></Content>
-					<string name="Name">httpClient</string>
-					<string name="ScriptGuid">{26A121D6-3562-4A41-A712-D5E57DBEF76E}</string>
-					<ProtectedString name="Source"><![CDATA[local httpClient = {};
-local HTTP = game:GetService("HttpService");
-
-function httpClient.new(url)
-	local self = setmetatable({ URL = url }, { __index = httpClient });
-	return self;
-end;
-
-function httpClient:Post(requestBody)
-	local success, reply = pcall(function()
-		return HTTP:PostAsync(self.URL, HTTP:JSONEncode(requestBody));
-	end);
-	
-	if not success then
-		return warn("[Discord-RPC] HTTP Post failed.");
-	end;
-	
-	return success, reply;
-end;
-
-return httpClient;
-]]></ProtectedString>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-			</Item>
-			<Item class="ModuleScript" referent="RBX108ED5248681466EB5DB4B4F10530D46">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<Content name="LinkedSource"><null></null></Content>
-					<string name="Name">util</string>
-					<string name="ScriptGuid">{0ED28A10-59C6-4FF7-90D8-5A0FD55AE45D}</string>
-					<ProtectedString name="Source"><![CDATA[local util = {};
-local DRPC = script:FindFirstAncestor("DRPC");
-
-local Data = require(DRPC.src.dataHandler);
-
--- Get place (Used for name later)
-local success, place = pcall(function()
-	return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId);
-end);
-
--- If offline, above fetch will have failed, remedy that by just getting the game.
-if not success then
-	place = game
-end;
-
-util.place = place;
-
-function util.getPlaceName()
-	return util.place.Name;
-end;
-
-local lastEdit = tick();
-local lastScript = game:GetService("StudioService").ActiveScript;
-local lastLen = 0;
-function util.hasChanges()
-	local s = game:GetService("StudioService").ActiveScript;
-	local changes = false;
-
-	if s then
-		local len = #s.Source:split("\n");
-		
-		if s ~= lastScript or lastLen ~= len then
-			lastLen = len;
-			lastScript = s;
-			lastEdit = tick();
-		end;
-		
-		if tick() - lastEdit > 180 then
-			changes = false;
-		else
-			changes = true;
-		end;
-	end;
-	
-	return changes;
-end;
-
-return util;]]></ProtectedString>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-			</Item>
-			<Item class="Folder" referent="RBX1F56E49BA6F247B7A63E0388CA40C992">
+			<Item class="Folder" referent="RBX638AB78E0F704C449DF777C958DEDBDA">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<string name="Name">ui</string>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBX7F913790527B4F58B66D4D6499BD7A13">
+				<Item class="ModuleScript" referent="RBXFC55737F087549B286DFF8932BA5FDC4">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -509,55 +548,87 @@ function UI:ProvidePlugin(plugin)
 	self.plugin = plugin;
 end;
 
-function UI:Start()
-	if not self.plugin then return end;
-	
-	local settingsGui = self.plugin:CreateDockWidgetPluginGui("settingsGui", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false));
-	
-	Assets.UI:Clone().Parent = settingsGui;
-	settingsGui.Title   = "DRPC Settings";
-	settingsGui.Enabled = true;
+function UI:CreateControllers(settingsGui)
+	-- Window Controller Init.
+	require(DRPC.src.ui.windowController):Init(settingsGui);
 
 	-- Resize Controller Init.
 	require(DRPC.src.ui.resizeController):Init(settingsGui);
+
+	-- Toggles Init.
 	local toggleController = require(DRPC.src.ui.toggleController);
 	toggleController.new("Enabled"):Init(settingsGui.UI.Container.Enable.Container.Switch);
 	toggleController.new("EnabledTS"):Init(settingsGui.UI.Container.EnableTS.Container.Switch);
+end;
 
-	local descriptionEditor = settingsGui.UI.Container.DescriptionInput.Input;
-	descriptionEditor.Text = Data:Get("Description") or "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES Lines)";
-	descriptionEditor.FocusLost:Connect(function()
-		Data:Set("Description", descriptionEditor.Text);
+function UI:CreateInputField(field, dataName, default)
+	field.Text = Data:Get(dataName) or default;
+	field.FocusLost:Connect(function()
+		Data:Set(dataName, field.Text);
 	end);
-	
-	local statusEditor = settingsGui.UI.Container.StateInput.Input;
-	statusEditor.Text = Data:Get("State") or "Workspace: $WORKSPACE";
-	statusEditor.FocusLost:Connect(function()
-		Data:Set("State", statusEditor.Text);
-	end);
-	
-	local savedButtons = Data:Get("Buttons") or {};
-	local button1 = settingsGui.UI.Container.Button1;
-	local button2 = settingsGui.UI.Container.Button2;
-	button1.Second.Input.Text = savedButtons[1] and savedButtons[1].label or "";
-	button2.Second.Input.Text = savedButtons[2] and savedButtons[2].label or "";
-	button1.First.Input.Text = savedButtons[1] and savedButtons[1].url or "";
-	button2.First.Input.Text = savedButtons[2] and savedButtons[2].url or "";
+end;
 
-	local function setLabel(i, prop, value)
-		if not savedButtons[i] then
-			savedButtons[i] = {};
+function UI:CreateUI()
+	if not self.plugin then return error("[Discord-RPC] UI Launched before plugin apparition.") end;
+
+	local settingsGui: DockWidgetPluginGui = self.plugin:CreateDockWidgetPluginGui(
+		"settingsGui",
+		DockWidgetPluginGuiInfo.new(
+			Enum.InitialDockState.Float,
+			false,
+			false
+		)
+	);
+
+	Assets.UI:Clone().Parent = settingsGui;
+
+	settingsGui.Title = "DRPC Settings";
+	settingsGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
+
+	settingsGui:BindToClose(function()
+		settingsGui.Enabled = false;
+		Data:Set("GUI_Open", false);
+	end);
+
+	return settingsGui;
+end;
+
+function UI:CreateButtonInputController(dataButtons, buttonInput, index, subIndex)
+	buttonInput.Text = dataButtons[index] and dataButtons[index][subIndex] or "";
+
+	buttonInput.FocusLost:Connect(function()
+		if not dataButtons[index] then
+			dataButtons[index] = {};
 		end;
-		savedButtons[i][prop] = value;
-		Data:Set("Buttons", savedButtons);
-	end;
-	
-	button1.Second.Input.FocusLost:Connect(function() setLabel(1, "label", button1.Second.Input.Text) end);
-	button2.Second.Input.FocusLost:Connect(function() setLabel(2, "label", button2.Second.Input.Text) end);
-	button1.First.Input.FocusLost:Connect(function() setLabel(1, "url", button1.First.Input.Text) end);
-	button2.First.Input.FocusLost:Connect(function() setLabel(2, "url", button2.First.Input.Text) end);
 
-	local infoVersion = settingsGui.UI.Container.Info.Version;
+		dataButtons[index][subIndex] = buttonInput.Text;
+
+		Data:Set("Buttons", dataButtons);
+	end);
+end;
+
+function UI:Start()
+	self.settingsGui = self:CreateUI();
+
+	-- Window Scroll/Field Resize/Toggle Handler
+	self:CreateControllers(self.settingsGui);
+
+	-- Input Fields
+	self:CreateInputField(self.settingsGui.UI.Container.DescriptionInput.Input, "Description", "$ACTIVITY:Editing $SCRIPT_NAME ($SCRIPT_LINES lines)");
+	self:CreateInputField(self.settingsGui.UI.Container.StateInput.Input, "State", "Workspace: $WORKSPACE");
+
+	-- Buttons
+	local savedButtons = Data:Get("Buttons") or {};
+	local button1 = self.settingsGui.UI.Container.Button1;
+	local button2 = self.settingsGui.UI.Container.Button2;
+
+	self:CreateButtonInputController(savedButtons, button1.First.Input, 1, "url");
+	self:CreateButtonInputController(savedButtons, button2.First.Input, 2, "url");
+	self:CreateButtonInputController(savedButtons, button1.Second.Input, 1, "label");
+	self:CreateButtonInputController(savedButtons, button2.Second.Input, 2, "label");
+
+	-- Version Indicator
+	local infoVersion = self.settingsGui.UI.Container.Info.Version;
 	infoVersion.Text = "v0.2.1-alpha";
 end;
 
@@ -566,7 +637,7 @@ return UI;]]></ProtectedString>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBX353E7B55FF764AEBBB6FCEB30A1CF7B4">
+				<Item class="ModuleScript" referent="RBXB1975BD49C6741DCA1D0A7A9AA90EF2C">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -599,7 +670,7 @@ return module
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBX7FF17BB5DEA84A108728ABFAED1CFDBB">
+				<Item class="ModuleScript" referent="RBXF15E51A0A0C84A56B1087AED5BDF852E">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<Content name="LinkedSource"><null></null></Content>
@@ -613,7 +684,9 @@ local Data = require(DRPC.src.dataHandler);
 local rs = game:GetService("RunService").RenderStepped;
 
 function module.new(dataSave)
-    return setmetatable({ dataSave = dataSave }, { __index = module });
+    local self = setmetatable({ dataSave = dataSave, wasEnabled = nil }, { __index = module });
+
+    return self;
 end
 
 function module:onClick(element)
@@ -625,6 +698,12 @@ end;
 function module:Init(element)
     local enabled = Data:Get(self.dataSave);
     Data:Set(self.dataSave, self:Move(element.Value, enabled or enabled == nil));
+
+    Data:AttachChange(self.dataSave, function(newData)
+        if self.wasEnabled ~= newData then
+            self:Move(element.Value, newData);
+        end;
+    end);
 
 	element.MouseButton1Click:Connect(self:onClick(element.Value));
     element.Value.MouseButton1Click:Connect(self:onClick(element.Value));
@@ -644,6 +723,7 @@ function module:Move(element, enabled)
             rs:Wait();
         end;
     end;
+    self.wasEnabled = enabled;
 
     element.Parent.Parent.Text.Title.Text = enabled and "Enabled" or "Disabled";
     return not not enabled;
@@ -655,16 +735,37 @@ return module;
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
+				<Item class="ModuleScript" referent="RBX55EB2EE29694431AA1D12524810AAECD">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">windowController</string>
+						<string name="ScriptGuid"></string>
+						<ProtectedString name="Source"><![CDATA[local module = {}
+
+function module:Init(settingsGui)
+	settingsGui.UI.Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+		settingsGui.UI.Container.CanvasSize = UDim2.new(0, 0, 0, math.ceil(settingsGui.UI.Container.UIListLayout.AbsoluteContentSize.Y) + 25)
+		settingsGui.UI.Scroller.Visible = settingsGui.UI.Container.UIListLayout.AbsoluteContentSize.Y + 25 > settingsGui.AbsoluteSize.Y
+	end)
+end
+
+return module
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX76882DF7AA904B2DAB296D01F33BCF8F">
+		<Item class="Folder" referent="RBXFB48B44FF295423D9EA879148210D860">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<string name="Name">assets</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="Frame" referent="RBX73457E92E15643BE9CED52E58014F816">
+			<Item class="Frame" referent="RBXA8DD0450EB7C4264B4E2963B508C9012">
 				<Properties>
 					<bool name="Active">false</bool>
 					<Vector2 name="AnchorPoint">
@@ -718,7 +819,7 @@ return module;
 					<bool name="Visible">true</bool>
 					<int name="ZIndex">2</int>
 				</Properties>
-				<Item class="ScrollingFrame" referent="RBXE7210B44A2094446AD3679193CEFEBED">
+				<Item class="ScrollingFrame" referent="RBXA9BDB57B31144F79AAE0446EC061E302">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -798,7 +899,7 @@ return module;
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">2</int>
 					</Properties>
-					<Item class="UIListLayout" referent="RBX78A900DA027E46B2BCA3C8A9BEF65762">
+					<Item class="UIListLayout" referent="RBX4E67DCB15502485ABBDCCC470722B5C3">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<token name="FillDirection">1</token>
@@ -814,7 +915,7 @@ return module;
 							<token name="VerticalAlignment">1</token>
 						</Properties>
 					</Item>
-					<Item class="UIPadding" referent="RBXA3417902B2604FBAB96BA387AECC7ADD">
+					<Item class="UIPadding" referent="RBXB488AB6594F94D3396FF3296C107015C">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<string name="Name">UIPadding</string>
@@ -838,7 +939,7 @@ return module;
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="Frame" referent="RBX3DDD1DC070D34F00A81F45E0F944483B">
+					<Item class="Frame" referent="RBX4DF2567331DF4A3F90D8342944596FB6">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -892,7 +993,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBXBF8D65564EF94CBDBCD11DD69CAADFF0">
+						<Item class="Frame" referent="RBX1122FF283D26475EABA64E115C55AEF0">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -946,7 +1047,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX72717724D57E44EF9377FC98358B8D18">
+							<Item class="Frame" referent="RBX8DC32BDB7E994F28897A47398A1DCD3A">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -1001,7 +1102,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="Frame" referent="RBX133F73FAB4184708B8185A7C21899C48">
+							<Item class="Frame" referent="RBX0231A6034D18447AB4DA2354B90519E1">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -1055,7 +1156,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="TextLabel" referent="RBXC4AB71A9A81941E8A737B3EEAD34603B">
+								<Item class="TextLabel" referent="RBXF25110BD5473459197039412585A6E68">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -1132,7 +1233,7 @@ return module;
 										<int name="ZIndex">50</int>
 									</Properties>
 								</Item>
-								<Item class="UIListLayout" referent="RBXE3F8A84DA24B4209961595DD37EB5D20">
+								<Item class="UIListLayout" referent="RBX6DE300BA85834A69AFE99B7C991BECB3">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<token name="FillDirection">1</token>
@@ -1149,7 +1250,7 @@ return module;
 									</Properties>
 								</Item>
 							</Item>
-							<Item class="ImageButton" referent="RBX51E3899820A44BD89F75C69007F3695F">
+							<Item class="ImageButton" referent="RBXB0778F1D59454493823645B54C9E8915">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -1241,7 +1342,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="UIPadding" referent="RBX3E234D40C8644532A458FAE575CBF3CD">
+								<Item class="UIPadding" referent="RBX39034BB7E40143028FB4E08CF18B4179">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<string name="Name">UIPadding</string>
@@ -1265,7 +1366,7 @@ return module;
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="ImageButton" referent="RBX08717CBF3F3346618F45E63AC7664398">
+								<Item class="ImageButton" referent="RBXF880482E86F842FBB9FBD1B9067FFABD">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -1357,7 +1458,7 @@ return module;
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">51</int>
 									</Properties>
-									<Item class="UIAspectRatioConstraint" referent="RBX8DD854E7A78741169FE63B3A0AD34690">
+									<Item class="UIAspectRatioConstraint" referent="RBX2FA171919AF84D5FB2D37D1444F4DB93">
 										<Properties>
 											<float name="AspectRatio">1</float>
 											<token name="AspectType">0</token>
@@ -1368,7 +1469,7 @@ return module;
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="UICorner" referent="RBX13D6BAF0FC8743068D967FACD9B397D1">
+									<Item class="UICorner" referent="RBXA1A9BC0AF20F4CE19F22095635B29018">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<UDim name="CornerRadius">
@@ -1381,7 +1482,7 @@ return module;
 										</Properties>
 									</Item>
 								</Item>
-								<Item class="UICorner" referent="RBX5CF3985EC8F84AD58A80E6AECA9DEA41">
+								<Item class="UICorner" referent="RBX2D499CEBAAB54A70926E1D5271253425">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<UDim name="CornerRadius">
@@ -1396,7 +1497,7 @@ return module;
 							</Item>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX714EFFAF31194362A50C33C5ADA6DC78">
+					<Item class="Frame" referent="RBXF657EE623B8A408D851E45DDB920E65C">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1450,7 +1551,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBX075736010BDC454CB4ECAA942804CEDA">
+						<Item class="TextLabel" referent="RBXA229AB675FBA4E4F83AFDE499ACBE25E">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1528,7 +1629,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXBE2AA4415D9847C48727D84893CB5AD6">
+					<Item class="Frame" referent="RBX296D94C6A44640F9AED6904C83BDF232">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1582,7 +1683,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBXF5E948529A2E403293D904F0F8A1FD0E">
+						<Item class="TextLabel" referent="RBXEC12A45C614748BBA3C9CD418157B74C">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1660,7 +1761,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX3B678798754047FA98FBF408A738FEC2">
+					<Item class="Frame" referent="RBX506B7B75C28F4FDA89C0F17BBA99D305">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1714,7 +1815,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBXE069664AC2C24A888D725467651855F4">
+						<Item class="Frame" referent="RBXC4BF5FE30CC640C48BC0DE2AF8B4F7D0">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1769,7 +1870,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="TextBox" referent="RBXA65E27B771FC4501A158715B30308A26">
+						<Item class="TextBox" referent="RBX8C601C77EEAA402B8CCD44618B0B96AB">
 							<Properties>
 								<bool name="Active">true</bool>
 								<Vector2 name="AnchorPoint">
@@ -1857,7 +1958,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX6F4FF47B9AD64A8EA61F5F031A8FF5D4">
+					<Item class="Frame" referent="RBX8DBD394AC36F40679C7D7AF5A0FD9BBF">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -1911,7 +2012,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBX9CD8448E9DBF46BAA967D959F04516C4">
+						<Item class="TextLabel" referent="RBX113350769A684B8BA34198F964A38BBE">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -1989,7 +2090,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXDF580300F7DD40C69FD090788C7C2EF8">
+					<Item class="Frame" referent="RBX5FA4E0317BC94F7397DCC78A9A494DBB">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -2043,7 +2144,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBXDE9D6CEF04464D588BEECFDEC3F308C3">
+						<Item class="TextLabel" referent="RBX13E00A926187455E8E8BAC8B5B7B74DE">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2121,7 +2222,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXA1A479E6E019482FBE4B0CD6660ACDBC">
+					<Item class="Frame" referent="RBX1048BC2B58F048D9AAE2F98ADF32CB40">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -2175,7 +2276,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBXAF1AA077EACE4272B90D686C532F09FB">
+						<Item class="Frame" referent="RBX8EB8D189847C4134ADED9E1B1A970BC5">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2229,7 +2330,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX97A1C00D97CC48068D3CEFC04FE22A2E">
+							<Item class="Frame" referent="RBX34A75A16602340D5AE00834A422BC6E5">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2284,7 +2385,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBX1E72DB96C67940829DB0A52A33B90CA9">
+							<Item class="TextBox" referent="RBX501D867F4FC04B3A94AF129307E80A95">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -2372,7 +2473,7 @@ return module;
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Frame" referent="RBX414CEC60F4D3441189D1B0DD67B90ECA">
+						<Item class="Frame" referent="RBX41FC97E01A4B4F209F62E05471BA232A">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2426,7 +2527,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX4E6EF0483F4E45E09542A7D1F962F8E5">
+							<Item class="Frame" referent="RBXCB7D09E1C57E4ADA99B2D015D74005FC">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2481,7 +2582,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBXF77762827A0E466A87D411B24446239B">
+							<Item class="TextBox" referent="RBX4E844335354546E181089E52AC29E7B1">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -2570,7 +2671,7 @@ return module;
 							</Item>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX44297069CCAD42CD964B8FDAECF0EA31">
+					<Item class="Frame" referent="RBX6081C08D6B6443968E8C5A186D8575D9">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -2624,7 +2725,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBXDAD84D07342E48DF9716F3A133FBDCBD">
+						<Item class="Frame" referent="RBX4CCA2F14A07343D38A6C4660A91B95C9">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2678,7 +2779,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX85AC069937024CAC9CBDB4BF2F7A1CE1">
+							<Item class="Frame" referent="RBX20004444EC09478EBD52AE630D0B5A58">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2733,7 +2834,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBX47B12C733C3241CCB12C2CFEB6B99B0A">
+							<Item class="TextBox" referent="RBX8A5215AB44824BA08E1996B135048FA6">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -2821,7 +2922,7 @@ return module;
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Frame" referent="RBXA8DB522CABA04E98A723895E59AA6772">
+						<Item class="Frame" referent="RBXCA470BA9857B4FB18E066C4D0CAC54B9">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -2875,7 +2976,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX967EA6E864994ABD94A584E542C74D39">
+							<Item class="Frame" referent="RBXDC39E01934264BDE90A8ADF1A1F13DDF">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -2930,7 +3031,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="TextBox" referent="RBXCBAD885F130C44AD9C10D47320C985CB">
+							<Item class="TextBox" referent="RBXEDB1F94D94724DE3BF125AC3BCA67CA1">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -3019,7 +3120,7 @@ return module;
 							</Item>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX861F3CCAB13C48A9BA2AF4C1F583E938">
+					<Item class="Frame" referent="RBX0057193181A540998C53691338471DB1">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3073,7 +3174,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBX8EA815CBF48E4B149C31F0E477BEDEEF">
+						<Item class="TextLabel" referent="RBXEA3BE9BD7FC0468095E187F6B5F8CDD3">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3150,7 +3251,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="TextLabel" referent="RBXA5528C70CDF44EC18493E88AAF25177B">
+						<Item class="TextLabel" referent="RBX657F4DFCF7DC4DEEA7254F3BD952EFA6">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3227,7 +3328,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="UIListLayout" referent="RBX615337905A6D435B9EBF72255D76FCA0">
+						<Item class="UIListLayout" referent="RBXD402559194BE447E94FB408697B6BE0B">
 							<Properties>
 								<BinaryString name="AttributesSerialize"></BinaryString>
 								<token name="FillDirection">1</token>
@@ -3244,7 +3345,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX7ADEC75555FF4885AC99942C7552D220">
+					<Item class="Frame" referent="RBXB9947E5B401D4CA7A5413E203DD0520B">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3298,7 +3399,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="TextLabel" referent="RBXC90DA4652B6B40CFA9EA612CA4AA7DE2">
+						<Item class="TextLabel" referent="RBX072B27F191A946608D35FFBA8220E6A8">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3376,7 +3477,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBX299C2E9360454589891890B0800770EA">
+					<Item class="Frame" referent="RBX3481E986BA7E4CA6A4A81D328B91F5A9">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3430,7 +3531,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBX946128B72F9247D98F071C49943E3C77">
+						<Item class="Frame" referent="RBX18530D9CD3A94712AAE9B2ADF697FE0C">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3485,7 +3586,7 @@ return module;
 								<int name="ZIndex">25</int>
 							</Properties>
 						</Item>
-						<Item class="TextBox" referent="RBXC9BB22DC350F4C5BBDBF1B5C61FFD364">
+						<Item class="TextBox" referent="RBX7A2CE53DB4894D5585145701BD5CE573">
 							<Properties>
 								<bool name="Active">true</bool>
 								<Vector2 name="AnchorPoint">
@@ -3573,7 +3674,7 @@ return module;
 							</Properties>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXDC5E0492400D49BB961DF896E9F99529">
+					<Item class="Frame" referent="RBXE19BA9804D2F4946BC055AAE64D72B16">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -3627,7 +3728,7 @@ return module;
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">10</int>
 						</Properties>
-						<Item class="Frame" referent="RBX3FF73DA0BE1B4C9C866AC1B32C7083E0">
+						<Item class="Frame" referent="RBX55B16115FA3344459EA23D453EEB8636">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -3681,7 +3782,7 @@ return module;
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">25</int>
 							</Properties>
-							<Item class="Frame" referent="RBX41F058A196114CECA774BF776058B7F8">
+							<Item class="Frame" referent="RBXBFBF40A351D142988FB22AD69CB7ED9B">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -3736,7 +3837,7 @@ return module;
 									<int name="ZIndex">50</int>
 								</Properties>
 							</Item>
-							<Item class="Frame" referent="RBX598A5B1B0D35481C80D385B0DA2D7731">
+							<Item class="Frame" referent="RBXF1AD671E6DFD48CCB3E2F22A68C294E2">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -3790,7 +3891,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="TextLabel" referent="RBX01B21626599E43D6A91D75FA5C1A1236">
+								<Item class="TextLabel" referent="RBX7B55A379512249B8A3E3F5E80A137F98">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -3867,7 +3968,7 @@ return module;
 										<int name="ZIndex">50</int>
 									</Properties>
 								</Item>
-								<Item class="UIListLayout" referent="RBXACFE8F116CBF4FEEA67AA765CF9BBC14">
+								<Item class="UIListLayout" referent="RBX564B7A109C6042FC8D2BB2C606EF02D1">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<token name="FillDirection">1</token>
@@ -3884,7 +3985,7 @@ return module;
 									</Properties>
 								</Item>
 							</Item>
-							<Item class="ImageButton" referent="RBX7B40AF6D198D4903AE7A107F9593A305">
+							<Item class="ImageButton" referent="RBX20AB9CE616EC4E5CAD2E346A9DFE19E7">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -3976,7 +4077,7 @@ return module;
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">50</int>
 								</Properties>
-								<Item class="UIPadding" referent="RBXD265CD6CD4A5493C932A52F1F3873B04">
+								<Item class="UIPadding" referent="RBX400A6429E27E4FE59279D31FE032193A">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<string name="Name">UIPadding</string>
@@ -4000,7 +4101,7 @@ return module;
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="ImageButton" referent="RBXEE6A7F2D18C74B3E8132C9BBC3E9525B">
+								<Item class="ImageButton" referent="RBXE06A0E8B1E9646928D59276035DD31D0">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -4092,7 +4193,7 @@ return module;
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">51</int>
 									</Properties>
-									<Item class="UIAspectRatioConstraint" referent="RBX7FEFF5EFB808438F956885418391AE11">
+									<Item class="UIAspectRatioConstraint" referent="RBX1BF0CEC27F7544F89B1C8339EC85D2FA">
 										<Properties>
 											<float name="AspectRatio">1</float>
 											<token name="AspectType">0</token>
@@ -4103,7 +4204,7 @@ return module;
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="UICorner" referent="RBXFBA115081A774D2D93D5AF2C3080CF1F">
+									<Item class="UICorner" referent="RBX16F8FDD43471496D8F8F1D227C5C8295">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<UDim name="CornerRadius">
@@ -4116,7 +4217,7 @@ return module;
 										</Properties>
 									</Item>
 								</Item>
-								<Item class="UICorner" referent="RBXD0D0959ED5394213908EB7FADFF6D90A">
+								<Item class="UICorner" referent="RBXA41B0369D754449FB1B7AB2DC72805BB">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<UDim name="CornerRadius">
@@ -4132,7 +4233,7 @@ return module;
 						</Item>
 					</Item>
 				</Item>
-				<Item class="Frame" referent="RBX3B8C5D5CEF19470FA09860292D4776AB">
+				<Item class="Frame" referent="RBX91B63A4C03B94022A09D93F3176677F5">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -4186,7 +4287,7 @@ return module;
 						<bool name="Visible">false</bool>
 						<int name="ZIndex">1</int>
 					</Properties>
-					<Item class="Frame" referent="RBXAF498E9D2BFA461FBCCAC09CA1E55D00">
+					<Item class="Frame" referent="RBX55A3C4E557794E39BF399A8C8949793E">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -4243,6 +4344,14 @@ return module;
 					</Item>
 				</Item>
 			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX20D5FECC61AB4724A5C5218BDBE6E41D">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<string name="Name">assets</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
 		</Item>
 	</Item>
 </roblox>
