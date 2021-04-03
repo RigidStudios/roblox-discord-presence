@@ -14,6 +14,7 @@ end
 local Data   = require(DRPC.src.dataHandler);
 local UI     = require(DRPC.src.ui.index);
 local Client = require(DRPC.src.client.index);
+local Plugin = require(DRPC.src.generators.pluginManager);
 
 local Http      = require(DRPC.src.httpClient).new("http://localhost:4455/");
 local ClientObj = Client.new(Http, false);
@@ -23,6 +24,7 @@ Data:AttachChange("Enabled", function(isEnabled)
 end);
 
 UI:Start();
+Plugin:Init(plugin);
 
 plugin.Unloading:Connect(function()
 	ClientObj.Enabled = false;
