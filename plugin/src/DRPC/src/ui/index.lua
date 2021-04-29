@@ -13,6 +13,9 @@ function UI:Start()
 	if not self.plugin then return end;
 	
 	local settingsGui = self.plugin:CreateDockWidgetPluginGui("settingsGui", DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false));
+	local dock = self.plugin:CreateToolbar("DRPC")
+	local triggerButtonInDock = dock:CreateButton("Settings", "Toggles configuration panel", "")
+	triggerButtonInDock.ClickableWhenViewportHidden = true
 	
 	Assets.UI:Clone().Parent = settingsGui;
 	settingsGui.Title   = "DRPC Settings";
@@ -62,7 +65,13 @@ function UI:Start()
 	button1.First.Input.FocusLost:Connect(function() setLabel(1, "url", button1.First.Input.Text) end);
 	button2.First.Input.FocusLost:Connect(function() setLabel(2, "url", button2.First.Input.Text) end);
 
+	triggerButtonInDock.Click:Connect(function()
+		settingsGui.Enabled = not settingsGui.Enabled
+		triggerButtonInDock:SetActive(settingsGui.Enabled)
+	end)
+
 	local infoVersion = settingsGui.UI.Container.Info.Version;
+	triggerButtonInDock:SetActive(settingsGui.Enabled)
 	infoVersion.Text = "v0.2.1-alpha";
 end;
 
