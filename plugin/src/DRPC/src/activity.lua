@@ -1,5 +1,5 @@
 local activity = {};
-local startTick = tick();
+local startTick = os.time();
 
 function activity.new()
 	-- Please don't remove this, I need jobs... :D
