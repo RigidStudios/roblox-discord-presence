@@ -5,42 +5,42 @@ function createClient() {
     RPC = new drpc.Client({ transport: 'ipc'});
 
     RPC.login({ clientId: "812381092963287050" });
-};
+}
 
 (async() => {
-    
+
     let chalk = require('chalk');
-    
+
     let http = require('http');
     let got = require('got');
     let fs = require('fs');
-    
+
     let rl = require('readline');
 
-    let userid;
-    try {
-        userid = fs.readFileSync('./userid.txt').toString();
-    } catch {};
-
-    // Perform start-up
-    if (!userid || userid == '') {
-        let instance = rl.createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
-
-        await new Promise((resolve, reject) => {
-            instance.question(chalk.white('What is your User ID? '), _userid => {
-                userid = _userid.toString();
-                
-                if (fs.existsSync('./userid.txt')) {
-                    fs.writeFileSync('./userid.txt', _userid)
-                }
-
-                resolve();
-            });
-        });
-    }
+    // let userid;
+    // try {
+    //     userid = fs.readFileSync('./userid.txt').toString();
+    // } catch {};
+    //
+    // // Perform start-up
+    // if (!userid || userid == '') {
+    //     let instance = rl.createInterface({
+    //         input: process.stdin,
+    //         output: process.stdout
+    //     });
+    //
+    //     await new Promise((resolve, reject) => {
+    //         instance.question(chalk.white('What is your User ID? '), _userid => {
+    //             userid = _userid.toString();
+    //
+    //             if (fs.existsSync('./userid.txt')) {
+    //                 fs.writeFileSync('./userid.txt', _userid)
+    //             }
+    //
+    //             resolve();
+    //         });
+    //     });
+    // }
 
     let lastStudioEdit = Date.now();
     http.createServer((req, res) => {
@@ -65,11 +65,13 @@ function createClient() {
                         pid: process.pid,
                         activity: data.activity
                     });
-                };
+                }
 
                 res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.end('SET Activity');
-            } catch (err) {console.log(err.message)};
+            } catch (err) {
+                console.log(err.message)
+            }
         });
     }).listen(4455);
 
