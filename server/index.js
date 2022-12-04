@@ -30,7 +30,7 @@ app.post("/", async (request, response) => {
 
 	try {
 		data = request.body;
-		console.log(data);
+		// console.log(data);
 
 		if (data.updateType == "CLOSE") {
 			client.request("SET_ACTIVITY", {
