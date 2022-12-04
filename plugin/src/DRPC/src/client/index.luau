@@ -40,9 +40,9 @@ function client:login(cb)
 		success = false;
 	end;
 
-	spawn(function()
-		while 1 do
-			wait(2.6); -- Accuracy un-necessary.
+	coroutine.wrap(function()
+		while true do
+			task.wait(2.6); -- Accuracy un-necessary.
 			
 			if self.Enabled then
 				self:SetActivity();
@@ -52,7 +52,7 @@ function client:login(cb)
 				break;
 			end;
 		end;
-	end);
+	end)()
 
 	if cb then
 		cb(success, reply);
