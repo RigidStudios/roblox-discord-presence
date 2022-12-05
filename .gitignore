@@ -1,2 +1,4 @@
 server/node_modules
-server/userid.txt
+server/userId.txt
+.DS_Store
+.idea
