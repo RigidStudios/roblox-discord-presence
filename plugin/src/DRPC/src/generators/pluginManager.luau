@@ -9,10 +9,11 @@ function pluginManager:Init(plugin: Plugin)
 
     local showButton = toolbar:CreateButton("Settings", "Set the parameters of your activity and toggle the plugin.", "rbxassetid://6540060106", "DRPC Settings");
 
-    local pEnabled = Data:Get("GUI_Open");
-    local enabled = pEnabled == nil and true or pEnabled;
+    --local pEnabled = Data:Get("GUI_Open");
+    -- local enabled = pEnabled == nil or pEnabled;
+    local enabled = false;
 
-    UI.settingsGui.Enabled = enabled;
+	UI.settingsGui.Enabled = enabled;
 
     showButton.Click:Connect(function()
         enabled = not enabled;
