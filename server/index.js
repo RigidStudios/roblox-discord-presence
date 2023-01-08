@@ -17,31 +17,6 @@ function createClient() {
     
     let rl = require('readline');
 
-    let userid;
-    try {
-        userid = fs.readFileSync('./userid.txt').toString();
-    } catch {};
-
-    // Perform start-up
-    if (!userid || userid == '') {
-        let instance = rl.createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
-
-        await new Promise((resolve, reject) => {
-            instance.question(chalk.white('What is your User ID? '), _userid => {
-                userid = _userid.toString();
-                
-                if (fs.existsSync('./userid.txt')) {
-                    fs.writeFileSync('./userid.txt', _userid)
-                }
-
-                resolve();
-            });
-        });
-    }
-
     let lastStudioEdit = Date.now();
     http.createServer((req, res) => {
         let data = "";
