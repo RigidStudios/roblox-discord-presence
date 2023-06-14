@@ -1,5 +1,6 @@
 ### ~~This repository is unmaintained, contact me via Discord at RigidStudios#6315 if you wish to maintain it, *this does not mean that the code does not work*.~~
 ### This repository is now being maintained by [Error-Cezar](https://github.com/Error-Cezar)
+# To Note: This current version is now deprecated, a new version is being rewritten (as of 06/14/2023)
 # roblox-discord-presence
 A plugin/local http server pair which connects to your discord client and sets your development status.
 
