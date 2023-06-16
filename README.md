@@ -43,7 +43,7 @@ If it doesn't work and you've correctly followed the steps, please [submit an is
 
 [@Error-Cezar](https://github.com/Error-Cezar) - Maintaining
 
-[@va1kio](https://github.com/va1kio) - UI Design/Scripting
+[@7kayoh](https://github.com/7kayoh) - UI Design/Scripting
 
 [@Kunal](https://github.com/MotixKunal) - Testing
 
