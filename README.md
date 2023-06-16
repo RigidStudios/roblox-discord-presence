@@ -1,8 +1,10 @@
-### ~~This repository is unmaintained, contact me via Discord at RigidStudios#6315 if you wish to maintain it, *this does not mean that the code does not work*.~~
-### This repository is now being maintained by [Error-Cezar](https://github.com/Error-Cezar)
-# To Note: This current version is now deprecated, a new version is being rewritten (as of 06/14/2023)
-# roblox-discord-presence
-A plugin/local http server pair which connects to your discord client and sets your development status.
+# roblox-discord-presence | maintained by [Error-Cezar](https://github.com/Error-Cezar)
+<div align="center">
+<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/RigidStudios/roblox-discord-presence/total?style=for-the-badge">
+  <br/>
+   <br/>
+</div>
+A plugin to add a custom Discord RPC (Rich PresenCe) to your ROBLOX Studio experince ! 
 
 Feel free to contribute code, README contributions must be substantial.
 
@@ -19,28 +21,29 @@ Feel free to contribute code, README contributions must be substantial.
    * `$WORKSPACE` - Place name/File name.
    * `$PLACE_ID` - Place name/"0".
    * `$PLACE_PUBLISHED:...:...` - If place published then first option otherwise second option.
-   * (More to come, feel free to [add your own](https://github.com/RigidStudios/roblox-discord-presence/blob/main/plugin/src/DRPC/src/generators/formatString.lua))
+   * (More to come, feel free to [add your own](https://github.com/RigidStudios/roblox-discord-presence/blob/main/plugin/src/DRPC/src/generators/formatString.luau))
 * Supports **buttons** (2 max.)
 * In-Studio configuration UI.
 * Toggleable.
 
 ## Installation
-* The plugin is available [here (DRPC_client)](https://github.com/RigidStudios/roblox-discord-presence/releases/tag/v0.3.0-alpha), and [here (direct plugin)](https://www.roblox.com/library/6478572909/DRPC).
-* The server is slightly more complicated to set up:
-   * To begin, you'll need an installation of [Node](https://nodejs.org/en/download/).
-   * Next, download the [DRPC_server](https://github.com/RigidStudios/roblox-discord-presence/releases/tag/v0.3.0-alpha), extract the files from the zip into a new folder.
-   * [Launch](https://i.imgur.com/cm8w8Pq.mp4) the command prompt in that file.
-   * Run `npm i` followed by `node index.js` (The latter will be your startup command whenever you need it running).
-   * As of right now, you'll be required to launch it at startup yourself until I make it a windows service, and you'll also have to keep the command prompt open.
-* Once the plugin and server are running on a place at the same time, you should see your rich presence change as long as your discord settings are correct:
-  `User Settings` > `Game Activity` > `Display currently running game as a status message` -> **Enabled**.
+* The plugin is available [here (DRPC_client)](https://github.com/RigidStudios/roblox-discord-presence/releases/latest), and [here (direct plugin)](https://www.roblox.com/library/6478572909/DRPC).
+* A server is also needed on your machine.
+* The Set-Up is very easy:
+   * Download the [DRPC Server](https://github.com/RigidStudios/roblox-discord-presence/releases/latest) with a supported OS.
+   * Extract the files into a folder.
+   * Open DRPC.
+   * Modify your settings to your liking.
+   * Enjoy !
 
-If it doesn't work and you've correctly followed the steps, either contribute to this very barebones installation guide to fix it for others, or submit an issue.
+If it doesn't work and you've correctly followed the steps, please [submit an issue](https://github.com/RigidStudios/roblox-discord-presence/issues/new/choose).
 
 ### Special Thanks to
 [@BaileyEatsPizza](https://github.com/BaileyEatsPizza) - Scripting
 
+[@Error-Cezar](https://github.com/Error-Cezar) - Maintaining
+
 [@va1kio](https://github.com/va1kio) - UI Design/Scripting
 
-[@Kunal0004](https://github.com/Kunal0004) - Testing
+[@Kunal](https://github.com/MotixKunal) - Testing
 
