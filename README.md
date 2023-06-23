@@ -14,19 +14,20 @@ Feel free to contribute code, README contributions must be substantial.
 
 ## Features
 * Plug & Play - You only need the executable for it to work !
-* Customizable Text.
+* Auto Updater
+* Customizable Rich Presence
 * Script context variables:
-   * `$SCRIPT_NAME` - Name of the script currently being edited.
-   * `$SCRIPT_LINES` - Count of the script's lines.
-   * `$SCRIPT_PARENT` - Name of the script's parent.
-   * `$ACTIVITY:...` - Activity status (Idle/Away) or if a script is actively being edited, selects text after the `:`.
-   * `$WORKSPACE` - Place name/File name.
-   * `$PLACE_ID` - Place name/"0".
-   * `$PLACE_PUBLISHED:...:...` - If place published then first option otherwise second option.
+   * `$SCRIPT_NAME` - Name of the script currently being edited
+   * `$SCRIPT_LINES` - Count of the script's lines
+   * `$SCRIPT_PARENT` - Name of the script's parent
+   * `$ACTIVITY:...` - Activity status (Idle/Away) or if a script is actively being edited, selects text after the `:`
+   * `$WORKSPACE` - Place name/File name
+   * `$PLACE_ID` - Place name/"0"
+   * `$PLACE_PUBLISHED:...:...` - If place published then first option otherwise second option
    * (More to come, feel free to [add your own](https://github.com/RigidStudios/roblox-discord-presence/blob/main/plugin/src/DRPC/src/generators/formatString.luau))
-* Supports **buttons** (2 max.)
-* In-Studio configuration UI.
-* Toggleable.
+* Supports **buttons** (2 max)
+* In-Studio configuration UI
+* Toggleable Rich Presence
 
 
 ## Requirements
