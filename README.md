@@ -25,7 +25,7 @@ Feel free to contribute code, README contributions must be substantial.
    * `$PLACE_ID` - Place name/"0"
    * `$PLACE_PUBLISHED:...:...` - If place published then first option otherwise second option
    * (More to come, feel free to [add your own](https://github.com/RigidStudios/roblox-discord-presence/blob/main/plugin/src/DRPC/src/generators/formatString.luau))
-* Supports **buttons** (2 max)
+* Supports **buttons** (maximum of 2)
 * In-Studio configuration UI
 * Toggleable Rich Presence
 
@@ -35,7 +35,7 @@ Feel free to contribute code, README contributions must be substantial.
 * [Studio Plugin](/#Installation)
 * [DRPC Server](/#Installation)
 ## Installation
-* The plugin is available [here (DRPC_client)](https://github.com/RigidStudios/roblox-discord-presence/releases/latest), and [here (direct plugin)](https://www.roblox.com/library/6478572909/DRPC).
+* The plugin is available [here (DRPC_client)](https://github.com/RigidStudios/roblox-discord-presence/releases/latest), and [here (direct plugin)](https://www.roblox.com/library/6478572909/DRPC). (the github will always be updated first !)
 * A server is also needed on your machine.
 * The Set-Up is very easy:
    * Download the [DRPC Server](https://github.com/RigidStudios/roblox-discord-presence/releases/latest) with a supported OS.
@@ -46,7 +46,10 @@ Feel free to contribute code, README contributions must be substantial.
 
 If it doesn't work and you've correctly followed the steps, please [submit an issue](https://github.com/RigidStudios/roblox-discord-presence/issues/new/choose).
 
-### Special Thanks to
+## Special Thanks
+> **Note**
+>DRPC have acquired certain goals thanks to the followings.
+
 [@BaileyEatsPizza](https://github.com/BaileyEatsPizza) - Scripting
 
 [@Error-Cezar](https://github.com/Error-Cezar) - Maintaining
@@ -54,4 +57,10 @@ If it doesn't work and you've correctly followed the steps, please [submit an is
 [@7kayoh](https://github.com/7kayoh) - UI Design/Scripting
 
 [@Kunal](https://github.com/MotixKunal) - Testing
+
+## Want the old work ?
+The legacy version is still available [here.](https://github.com/RigidStudios/roblox-discord-presence/tree/Legacy)
+
+> **Warning**
+> The Legacy version is not maintained
 
